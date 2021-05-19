@@ -2,10 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:future_jobs/theme.dart';
 import 'package:future_jobs/widgets/category_card.dart';
 import 'package:future_jobs/widgets/job_tile.dart';
+import 'package:provider/provider.dart';
+import 'package:future_jobs/providers/user_provider.dart';
 
 class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    var userProvider = Provider.of<UserProvider>(context);
+    
     Widget header() {
       return Container(
         margin: EdgeInsets.only(
@@ -28,7 +32,7 @@ class HomePage extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      'Jason Powell',
+                      userProvider.user.name,
                       style: blackTextStyle.copyWith(
                         fontSize: 24,
                         fontWeight: semiBold,
