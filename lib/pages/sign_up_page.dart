@@ -17,6 +17,8 @@ class _SignUpPageState extends State<SignUpPage> {
   TextEditingController passwordController = TextEditingController(text: '');
   TextEditingController goalController = TextEditingController(text: '');
 
+  bool isLoading = false;
+
   @override
   Widget build(BuildContext context) {
     var authProvider = Provider.of<AuthProvider>(context);
@@ -276,36 +278,55 @@ class _SignUpPageState extends State<SignUpPage> {
         margin: EdgeInsets.only(top: 40),
         height: 45,
         width: double.infinity,
-        child: TextButton(
-          onPressed: () async {
-            UserModel user = await authProvider.register(
-              emailController.text,
-              passwordController.text,
-              nameController.text,
-              goalController.text,
-            );
+        child: isLoading
+            ? Center(
+                child: CircularProgressIndicator(),
+              )
+            : TextButton(
+                onPressed: () async {
+                  if (nameController.text.isEmpty ||
+                      emailController.text.isEmpty ||
+                      passwordController.text.isEmpty ||
+                      goalController.text.isEmpty) {
+                    showError('Semua field harus diisi');
+                  } else {
+                    setState(() {
+                      isLoading = true;
+                    });
 
-            if (user == null) {
-              showError('email sudah terdaftar');
-            } else {
-              userProvider.user = user;
-              Navigator.pushNamedAndRemoveUntil(
-                  context, '/home', (route) => false);
-            }
-          },
-          style: TextButton.styleFrom(
-            backgroundColor: primaryColor,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(66),
-            ),
-          ),
-          child: Text(
-            'Sign Up',
-            style: whiteTextStyle.copyWith(
-              fontWeight: medium,
-            ),
-          ),
-        ),
+                    UserModel user = await authProvider.register(
+                      emailController.text,
+                      passwordController.text,
+                      nameController.text,
+                      goalController.text,
+                    );
+
+                    setState(() {
+                      isLoading = false;
+                    });
+
+                    if (user == null) {
+                      showError('email sudah terdaftar');
+                    } else {
+                      userProvider.user = user;
+                      Navigator.pushNamedAndRemoveUntil(
+                          context, '/home', (route) => false);
+                    }
+                  }
+                },
+                style: TextButton.styleFrom(
+                  backgroundColor: primaryColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(66),
+                  ),
+                ),
+                child: Text(
+                  'Sign Up',
+                  style: whiteTextStyle.copyWith(
+                    fontWeight: medium,
+                  ),
+                ),
+              ),
       );
     }
 
