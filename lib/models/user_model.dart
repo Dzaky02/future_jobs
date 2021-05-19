@@ -14,4 +14,14 @@ class UserModel {
     this.name = json['name'];
     this.goal = json['goal'];
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': this.id,
+      'emial': this.email,
+      'password': this.password,
+      'name': this.name,
+      'goal': this.goal,
+    };
+  }
 }
