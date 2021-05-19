@@ -1,6 +1,10 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:future_jobs/models/user_model.dart';
 import 'package:future_jobs/theme.dart';
+import 'package:provider/provider.dart';
+import 'package:future_jobs/providers/auth_provider.dart';
+import 'package:future_jobs/providers/user_provider.dart';
 
 class SignUpPage extends StatefulWidget {
   @override
@@ -11,10 +15,22 @@ class _SignUpPageState extends State<SignUpPage> {
   TextEditingController nameController = TextEditingController(text: '');
   TextEditingController emailController = TextEditingController(text: '');
   TextEditingController passwordController = TextEditingController(text: '');
-  TextEditingController motivationController = TextEditingController(text: '');
+  TextEditingController goalController = TextEditingController(text: '');
 
   @override
   Widget build(BuildContext context) {
+    var authProvider = Provider.of<AuthProvider>(context);
+    var userProvider = Provider.of<UserProvider>(context);
+
+    void showError(String message) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.red,
+          content: Text(message),
+        ),
+      );
+    }
+
     Widget header() {
       return Container(
         margin: EdgeInsets.only(top: 30),
@@ -224,7 +240,7 @@ class _SignUpPageState extends State<SignUpPage> {
               height: 8,
             ),
             TextFormField(
-              controller: motivationController,
+              controller: goalController,
               cursorColor: primaryColor,
               onChanged: (value) {
                 setState(() {});
@@ -261,9 +277,21 @@ class _SignUpPageState extends State<SignUpPage> {
         height: 45,
         width: double.infinity,
         child: TextButton(
-          onPressed: () {
-            Navigator.pushNamedAndRemoveUntil(
-                context, '/home', (route) => false);
+          onPressed: () async {
+            UserModel user = await authProvider.register(
+              emailController.text,
+              passwordController.text,
+              nameController.text,
+              goalController.text,
+            );
+
+            if (user == null) {
+              showError('email sudah terdaftar');
+            } else {
+              userProvider.user = user;
+              Navigator.pushNamedAndRemoveUntil(
+                  context, '/home', (route) => false);
+            }
           },
           style: TextButton.styleFrom(
             backgroundColor: primaryColor,
