@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:future_jobs/models/category_model.dart';
+import 'package:future_jobs/models/job_model.dart';
 import 'package:future_jobs/providers/category_provider.dart';
+import 'package:future_jobs/providers/job_provider.dart';
 import 'package:future_jobs/theme.dart';
 import 'package:future_jobs/widgets/category_card.dart';
 import 'package:future_jobs/widgets/job_tile.dart';
@@ -12,6 +14,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     var userProvider = Provider.of<UserProvider>(context);
     var categoryProvider = Provider.of<CategoryProvider>(context);
+    var jobProvider = Provider.of<JobProvider>(context);
 
     Widget header() {
       return Container(
@@ -107,31 +110,6 @@ class HomePage extends StatelessWidget {
                         ),
                       );
                     }).toList(),
-                    // [
-                    // SizedBox(
-                    //   width: defaultMargin,
-                    // ),
-                    // CategoryCard(
-                    //   imageUrl: 'assets/image_category1.png',
-                    //   name: 'Web Developer',
-                    // ),
-                    // CategoryCard(
-                    //   imageUrl: 'assets/image_category2.png',
-                    //   name: 'Mobile Developer',
-                    // ),
-                    // CategoryCard(
-                    //   imageUrl: 'assets/image_category3.png',
-                    //   name: 'App Designer',
-                    // ),
-                    // CategoryCard(
-                    //   imageUrl: 'assets/image_category4.png',
-                    //   name: 'Content Writer',
-                    // ),
-                    // CategoryCard(
-                    //   imageUrl: 'assets/image_category5.png',
-                    //   name: 'Video Grapher',
-                    // ),
-                    // ],
                   );
                 }
 
@@ -164,21 +142,41 @@ class HomePage extends StatelessWidget {
             SizedBox(
               height: 24,
             ),
-            JobTile(
-              companyLogo: 'assets/icon_google.png',
-              name: 'Front-End Developer',
-              companyName: 'Google',
+            FutureBuilder<List<JobModel>>(
+              future: jobProvider.getJobs(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  return Column(
+                    children: snapshot.data.map((job) {
+                      return JobTile(
+                        companyLogo: job.companyLogo,
+                        name: job.name,
+                        companyName: job.companyLogo,
+                      );
+                    }).toList(),
+                  );
+                }
+
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              },
             ),
-            JobTile(
-              companyLogo: 'assets/icon_instagram.png',
-              name: 'UI Designer',
-              companyName: 'Instagram',
-            ),
-            JobTile(
-              companyLogo: 'assets/icon_facebook.png',
-              name: 'Data Scientist',
-              companyName: 'Facebook',
-            ),
+            // JobTile(
+            //   companyLogo: 'assets/icon_google.png',
+            //   name: 'Front-End Developer',
+            //   companyName: 'Google',
+            // ),
+            // JobTile(
+            //   companyLogo: 'assets/icon_instagram.png',
+            //   name: 'UI Designer',
+            //   companyName: 'Instagram',
+            // ),
+            // JobTile(
+            //   companyLogo: 'assets/icon_facebook.png',
+            //   name: 'Data Scientist',
+            //   companyName: 'Facebook',
+            // ),
           ],
         ),
       );
