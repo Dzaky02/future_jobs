@@ -173,6 +173,9 @@ class _SignInPageState extends State<SignInPage> {
                       isLoading = true;
                     });
 
+                    print(
+                        emailController.text + '\n' + passwordController.text);
+
                     UserModel user = await authProvider.login(
                       emailController.text,
                       passwordController.text,
@@ -236,16 +239,18 @@ class _SignInPageState extends State<SignInPage> {
           padding: EdgeInsets.symmetric(
             horizontal: defaultMargin,
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              header(),
-              illustration(),
-              inputEmail(),
-              inputPassword(),
-              signInButton(),
-              signUpButton(),
-            ],
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                header(),
+                illustration(),
+                inputEmail(),
+                inputPassword(),
+                signInButton(),
+                signUpButton(),
+              ],
+            ),
           ),
         ),
       ),

@@ -7,12 +7,13 @@ import 'package:future_jobs/models/user_model.dart';
 import 'package:http/http.dart' as http;
 
 class AuthProvider with ChangeNotifier {
-  Future<UserModel> register(String email, String password, String name, String goal) async {
+  Future<UserModel> register(
+      String email, String password, String name, String goal) async {
     try {
       var body = {
-        'email': email,
-        'passwrord': password,
         'name': name,
+        'email': email,
+        'password': password,
         'goal': goal,
       };
 
@@ -39,7 +40,7 @@ class AuthProvider with ChangeNotifier {
     try {
       var body = {
         'email': email,
-        'passwrord': password,
+        'password': password,
       };
 
       var response = await http.post(
@@ -47,8 +48,8 @@ class AuthProvider with ChangeNotifier {
         body: body,
       );
 
-      print(response.statusCode);
-      print(response.body);
+      print('Code: ' + response.statusCode.toString());
+      print('Body:' + response.body);
 
       if (response.statusCode == 200) {
         return UserModel.fromJson(jsonDecode(response.body));
