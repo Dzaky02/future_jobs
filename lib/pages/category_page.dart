@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:future_jobs/models/category_model.dart';
 import 'package:future_jobs/models/job_model.dart';
 import 'package:future_jobs/providers/job_provider.dart';
 import 'package:future_jobs/theme.dart';
@@ -6,10 +7,11 @@ import 'package:future_jobs/widgets/job_tile.dart';
 import 'package:provider/provider.dart';
 
 class CategoryPage extends StatelessWidget {
-  final String name;
-  final String imageUrl;
+  // final String name;
+  // final String imageUrl;
+  final CategoryModel category;
 
-  CategoryPage({this.imageUrl, this.name});
+  CategoryPage(this.category);
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +29,7 @@ class CategoryPage extends StatelessWidget {
           image: DecorationImage(
             fit: BoxFit.cover,
             image: NetworkImage(
-              imageUrl,
+              category.imageUrl,
             ),
           ),
           borderRadius: BorderRadius.vertical(
@@ -39,7 +41,7 @@ class CategoryPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              name,
+              category.name,
               style: whiteTextStyle.copyWith(
                 fontSize: 24,
                 fontWeight: semiBold,
@@ -80,17 +82,11 @@ class CategoryPage extends StatelessWidget {
               height: 24,
             ),
             FutureBuilder<List<JobModel>>(
-              future: jobProvider.getJobsByCategory(name),
+              future: jobProvider.getJobsByCategory(category.name),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.done) {
                   return Column(
-                    children: snapshot.data
-                        .map((job) => JobTile(
-                              companyLogo: job.companyLogo,
-                              name: job.name,
-                              companyName: job.companyName,
-                            ))
-                        .toList(),
+                    children: snapshot.data.map((job) => JobTile(job)).toList(),
                   );
                 }
 
@@ -129,13 +125,7 @@ class CategoryPage extends StatelessWidget {
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.done) {
                   return Column(
-                    children: snapshot.data
-                        .map((job) => JobTile(
-                              companyLogo: job.companyLogo,
-                              name: job.name,
-                              companyName: job.companyName,
-                            ))
-                        .toList(),
+                    children: snapshot.data.map((job) => JobTile(job)).toList(),
                   );
                 }
 

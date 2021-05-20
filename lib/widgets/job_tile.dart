@@ -1,18 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:future_jobs/models/job_model.dart';
 import 'package:future_jobs/pages/detail_page.dart';
 
 import '../theme.dart';
 
 class JobTile extends StatelessWidget {
-  final String name;
-  final String companyName;
-  final String companyLogo;
+  final JobModel job;
 
-  JobTile({
-    this.name,
-    this.companyName,
-    this.companyLogo,
-  });
+  JobTile(this.job);
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +24,7 @@ class JobTile extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Image.network(
-            companyLogo,
+            job.companyLogo,
             width: 44,
           ),
           SizedBox(
@@ -40,7 +35,7 @@ class JobTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  name,
+                  job.name,
                   style: blackTextStyle.copyWith(
                     fontSize: 16,
                     fontWeight: medium,
@@ -50,7 +45,7 @@ class JobTile extends StatelessWidget {
                   height: 2,
                 ),
                 Text(
-                  companyName,
+                  job.companyName,
                   style: greyTextStyle,
                 ),
                 SizedBox(

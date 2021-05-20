@@ -104,10 +104,7 @@ class HomePage extends StatelessWidget {
                         margin: EdgeInsets.only(
                           left: index == 0 ? defaultMargin : 0,
                         ),
-                        child: CategoryCard(
-                          imageUrl: category.imageUrl,
-                          name: category.name,
-                        ),
+                        child: CategoryCard(category),
                       );
                     }).toList(),
                   );
@@ -147,13 +144,7 @@ class HomePage extends StatelessWidget {
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.done) {
                   return Column(
-                    children: snapshot.data
-                        .map((job) => JobTile(
-                              companyLogo: job.companyLogo,
-                              name: job.name,
-                              companyName: job.companyName,
-                            ))
-                        .toList(),
+                    children: snapshot.data.map((job) => JobTile(job)).toList(),
                   );
                 }
 
