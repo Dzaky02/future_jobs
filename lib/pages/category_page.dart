@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:future_jobs/models/job_model.dart';
+import 'package:future_jobs/providers/job_provider.dart';
 import 'package:future_jobs/theme.dart';
 import 'package:future_jobs/widgets/job_tile.dart';
+import 'package:provider/provider.dart';
 
 class CategoryPage extends StatelessWidget {
   final String name;
@@ -10,6 +13,8 @@ class CategoryPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var jobProvider = Provider.of<JobProvider>(context);
+
     Widget header() {
       return Container(
         height: 270,
@@ -21,7 +26,7 @@ class CategoryPage extends StatelessWidget {
         decoration: BoxDecoration(
           image: DecorationImage(
             fit: BoxFit.cover,
-            image: AssetImage(
+            image: NetworkImage(
               imageUrl,
             ),
           ),
@@ -74,20 +79,25 @@ class CategoryPage extends StatelessWidget {
             SizedBox(
               height: 24,
             ),
-            JobTile(
-              companyLogo: 'assets/icon_google.png',
-              name: 'Front-End Developer',
-              companyName: 'Google',
-            ),
-            JobTile(
-              companyLogo: 'assets/icon_instagram.png',
-              name: 'UI Designer',
-              companyName: 'Instagram',
-            ),
-            JobTile(
-              companyLogo: 'assets/icon_facebook.png',
-              name: 'Data Scientist',
-              companyName: 'Facebook',
+            FutureBuilder<List<JobModel>>(
+              future: jobProvider.getJobsByCategory(name),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  return Column(
+                    children: snapshot.data
+                        .map((job) => JobTile(
+                              companyLogo: job.companyLogo,
+                              name: job.name,
+                              companyName: job.companyName,
+                            ))
+                        .toList(),
+                  );
+                }
+
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              },
             ),
           ],
         ),
@@ -114,20 +124,25 @@ class CategoryPage extends StatelessWidget {
             SizedBox(
               height: 24,
             ),
-            JobTile(
-              companyLogo: 'assets/icon_google.png',
-              name: 'Front-End Developer',
-              companyName: 'Google',
-            ),
-            JobTile(
-              companyLogo: 'assets/icon_instagram.png',
-              name: 'UI Designer',
-              companyName: 'Instagram',
-            ),
-            JobTile(
-              companyLogo: 'assets/icon_facebook.png',
-              name: 'Data Scientist',
-              companyName: 'Facebook',
+            FutureBuilder<List<JobModel>>(
+              future: jobProvider.getJobs(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  return Column(
+                    children: snapshot.data
+                        .map((job) => JobTile(
+                              companyLogo: job.companyLogo,
+                              name: job.name,
+                              companyName: job.companyName,
+                            ))
+                        .toList(),
+                  );
+                }
+
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              },
             ),
           ],
         ),
