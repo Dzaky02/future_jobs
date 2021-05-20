@@ -3,14 +3,14 @@ class CategoryModel {
   String name;
   String imageUrl;
   int createdAt;
-  int updatesAt;
+  int updatedAt;
 
   CategoryModel({
     this.id,
     this.name,
     this.imageUrl,
     this.createdAt,
-    this.updatesAt,
+    this.updatedAt,
   });
   
   CategoryModel.fromJson(Map<String, dynamic> json) {
@@ -18,7 +18,7 @@ class CategoryModel {
     this.name = json['name'];
     this.imageUrl = json['imageUrl'];
     this.createdAt = json['createdAt'];
-    this.updatesAt = json['updatedAt'];
+    this.updatedAt = json['updatedAt'];
   }
 
   Map<String, dynamic> toJson() {
@@ -27,7 +27,7 @@ class CategoryModel {
       'name': this.name,
       'imageUrl': this.imageUrl,
       'createdAt': this.createdAt,
-      'updatesAt': this.updatesAt,
+      'updatesAt': this.updatedAt,
     };
   }
 }
