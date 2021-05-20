@@ -147,13 +147,13 @@ class HomePage extends StatelessWidget {
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.done) {
                   return Column(
-                    children: snapshot.data.map((job) {
-                      return JobTile(
-                        companyLogo: job.companyLogo,
-                        name: job.name,
-                        companyName: job.companyLogo,
-                      );
-                    }).toList(),
+                    children: snapshot.data
+                        .map((job) => JobTile(
+                              companyLogo: job.companyLogo,
+                              name: job.name,
+                              companyName: job.companyName,
+                            ))
+                        .toList(),
                   );
                 }
 

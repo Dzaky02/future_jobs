@@ -5,9 +5,9 @@ class JobModel {
   String companyName;
   String companyLogo;
   String location;
-  List<String> about;
-  List<String> qualifications;
-  List<String> responsibiities;
+  List about;
+  List qualifications;
+  List responsibiities;
   int createdAt;
   int updatedAt;
 
