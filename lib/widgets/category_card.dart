@@ -30,7 +30,7 @@ class CategoryCard extends StatelessWidget {
         padding: EdgeInsets.all(16),
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage(
+            image: NetworkImage(
               imageUrl,
             ),
           ),
