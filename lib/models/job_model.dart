@@ -7,7 +7,7 @@ class JobModel {
   String location;
   List about;
   List qualifications;
-  List responsibiities;
+  List responsibilities;
   int createdAt;
   int updatedAt;
 
@@ -20,7 +20,7 @@ class JobModel {
     this.location,
     this.about,
     this.qualifications,
-    this.responsibiities,
+    this.responsibilities,
     this.createdAt,
     this.updatedAt,
   });
@@ -34,7 +34,7 @@ class JobModel {
     this.location = json['location'];
     this.about = json['about'];
     this.qualifications = json['qualifications'];
-    this.responsibiities = json['responsibiities'];
+    this.responsibilities = json['responsibilities'];
     this.createdAt = json['createdAt'];
     this.updatedAt = json['updatedAt'];
   }
@@ -49,7 +49,7 @@ class JobModel {
       'location': this.location,
       'about': this.about,
       'qualifications': this.qualifications,
-      'responsibiities': this.responsibiities,
+      'responsibilities': this.responsibilities,
       'createdAt': this.createdAt,
       'updatesAt': this.updatedAt,
     };
