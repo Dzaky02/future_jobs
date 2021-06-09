@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:future_jobs/theme.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class SplashPage extends StatefulWidget {
   @override
@@ -27,9 +28,26 @@ class _SplashPageState extends State<SplashPage> {
     return Scaffold(
       backgroundColor: primaryColor,
       body: Center(
-        child: Image.asset(
-          'assets/image_splash.png',
-          width: 178,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(
+              'assets/logo.png',
+              width: 59,
+              height: 76,
+            ),
+            SizedBox(
+              height: 50,
+            ),
+            Text(
+              'FUTUREJOB',
+              style: GoogleFonts.poppins(
+                color: Colors.white,
+                fontSize: 32,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
         ),
       ),
     );
