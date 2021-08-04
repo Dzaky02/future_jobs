@@ -63,7 +63,7 @@ class _SignInPageState extends State<SignInPage> {
       return Center(
         child: Image.asset(
           'assets/image_sign_in.png',
-          height: SizeConfig.scaleHeight(200),
+          height: SizeConfig.scaleHeight(210),
         ),
       );
     }
@@ -234,6 +234,8 @@ class _SignInPageState extends State<SignInPage> {
     return Scaffold(
       body: SafeArea(
         child: ListView(
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
           padding: EdgeInsets.symmetric(
             vertical: SizeConfig.scaleHeight(30),
             horizontal: SizeConfig.scaleWidth(24),
