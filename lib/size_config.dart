@@ -23,8 +23,9 @@ class SizeConfig {
     // 360x792 is width from figma design you can use 100 for 100% scaling.
     blockSizeHorizontal = screenWidth / 360;
     blockSizeVertical = screenHeight / 792;
-    _scaleText =
-        (screenHeight < screenWidth) ? blockSizeVertical : blockSizeHorizontal;
+    _scaleText = (blockSizeVertical < blockSizeHorizontal)
+        ? blockSizeVertical
+        : blockSizeHorizontal;
     print(
         'Width: ($screenWidth)$blockSizeHorizontal\nHeight: ($screenHeight)$blockSizeVertical\nTxt: $_scaleText');
 
