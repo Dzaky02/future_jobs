@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:future_jobs/size_config.dart';
 import 'package:future_jobs/theme.dart';
 
 class OnboardingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     Widget backgroundImage() {
       return Image.asset(
         'assets/onboarding.png',
@@ -18,84 +20,78 @@ class OnboardingPage extends StatelessWidget {
         child: Container(
           width: MediaQuery.of(context).size.width,
           padding: EdgeInsets.symmetric(
-            horizontal: 30,
+            horizontal: SizeConfig.scaleWidth(30),
+            vertical: SizeConfig.scaleHeight(50),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(
-                height: 50,
-              ),
               Text(
                 'Build Your Next\nFuture Career Like\na Master',
                 style: whiteTextStyle.copyWith(
-                  fontSize: 32,
+                  fontSize: SizeConfig.scaleText(32),
                 ),
               ),
-              SizedBox(
-                height: 20,
-              ),
+              SizedBox(height: SizeConfig.scaleHeight(20)),
               Text(
                 '18,000 jobs available',
                 style: whiteTextStyle.copyWith(
+                  fontSize: SizeConfig.scaleText(14),
                   fontWeight: light,
                 ),
               ),
               Spacer(),
               Center(
-                child: Container(
-                  width: 200,
-                  height: 45,
-                  child: TextButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/sign-up');
-                    },
-                    style: TextButton.styleFrom(
-                      backgroundColor: whiteColor,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(66),
-                      ),
+                child: TextButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/sign-up');
+                  },
+                  style: TextButton.styleFrom(
+                    backgroundColor: whiteColor,
+                    padding: EdgeInsets.symmetric(
+                      vertical: SizeConfig.scaleText(12),
+                      horizontal: SizeConfig.scaleText(60),
                     ),
-                    child: Text(
-                      'Get Started',
-                      style: purpleTextStyle.copyWith(
-                        fontWeight: medium,
-                      ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(66),
+                    ),
+                  ),
+                  child: Text(
+                    'Get Started',
+                    style: purpleTextStyle.copyWith(
+                      fontSize: SizeConfig.scaleText(14),
+                      fontWeight: medium,
                     ),
                   ),
                 ),
               ),
-              SizedBox(
-                height: 16,
-              ),
+              SizedBox(height: SizeConfig.scaleHeight(16)),
               Center(
-                child: Container(
-                  width: 200,
-                  height: 45,
-                  child: TextButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/sign-in');
-                    },
-                    style: TextButton.styleFrom(
-                      backgroundColor: transparentColor,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(66),
-                        side: BorderSide(
-                          color: whiteColor,
-                        ),
-                      ),
+                child: TextButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/sign-in');
+                  },
+                  style: TextButton.styleFrom(
+                    backgroundColor: transparentColor,
+                    padding: EdgeInsets.symmetric(
+                      vertical: SizeConfig.scaleText(12),
+                      horizontal: SizeConfig.scaleText(76),
                     ),
-                    child: Text(
-                      'Sign In',
-                      style: whiteTextStyle.copyWith(
-                        fontWeight: medium,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(66),
+                      side: BorderSide(
+                        color: whiteColor,
                       ),
                     ),
                   ),
+                  child: Text(
+                    'Sign In',
+                    style: whiteTextStyle.copyWith(
+                      fontSize: SizeConfig.scaleText(14),
+                      fontWeight: medium,
+                    ),
+                  ),
                 ),
-              ),
-              SizedBox(
-                height: 50,
               ),
             ],
           ),

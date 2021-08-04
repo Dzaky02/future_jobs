@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:future_jobs/size_config.dart';
 import 'package:future_jobs/theme.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -25,6 +26,7 @@ class _SplashPageState extends State<SplashPage> {
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     return Scaffold(
       backgroundColor: primaryColor,
       body: Center(
@@ -33,17 +35,17 @@ class _SplashPageState extends State<SplashPage> {
           children: [
             Image.asset(
               'assets/logo.png',
-              width: 59,
-              height: 76,
+              width: SizeConfig.scaleWidth(59),
+              height: SizeConfig.scaleHeight(76),
             ),
             SizedBox(
-              height: 50,
+              height: SizeConfig.scaleHeight(50),
             ),
             Text(
               'FUTUREJOB',
               style: GoogleFonts.poppins(
                 color: Colors.white,
-                fontSize: 32,
+                fontSize: SizeConfig.scaleText(32),
                 fontWeight: FontWeight.w600,
               ),
             ),
