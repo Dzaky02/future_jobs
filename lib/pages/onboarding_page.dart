@@ -49,8 +49,8 @@ class OnboardingPage extends StatelessWidget {
                   style: TextButton.styleFrom(
                     backgroundColor: whiteColor,
                     padding: EdgeInsets.symmetric(
-                      vertical: SizeConfig.scaleText(12),
-                      horizontal: SizeConfig.scaleText(60),
+                      vertical: SizeConfig.scaleWidth(12),
+                      horizontal: SizeConfig.scaleWidth(60),
                     ),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(66),
@@ -74,8 +74,8 @@ class OnboardingPage extends StatelessWidget {
                   style: TextButton.styleFrom(
                     backgroundColor: transparentColor,
                     padding: EdgeInsets.symmetric(
-                      vertical: SizeConfig.scaleText(12),
-                      horizontal: SizeConfig.scaleText(76),
+                      vertical: SizeConfig.scaleWidth(12),
+                      horizontal: SizeConfig.scaleWidth(76),
                     ),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(66),

@@ -26,8 +26,8 @@ class SizeConfig {
     _scaleText = (blockSizeVertical < blockSizeHorizontal)
         ? blockSizeVertical
         : blockSizeHorizontal;
-    print(
-        'Width: ($screenWidth)$blockSizeHorizontal\nHeight: ($screenHeight)$blockSizeVertical\nTxt: $_scaleText');
+    // print(
+    //     'Width: ($screenWidth)$blockSizeHorizontal\nHeight: ($screenHeight)$blockSizeVertical\nTxt: $_scaleText');
 
     // Padding
     paddingTop = _mediaQueryData.padding.top; // For status bar
