@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:future_jobs/models/job_model.dart';
+import 'package:future_jobs/size_config.dart';
 
 import '../theme.dart';
 
@@ -17,62 +18,64 @@ class _DetailPageState extends State<DetailPage> {
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
+
     Widget header() {
-      return Container(
-        margin: EdgeInsets.only(
-          top: 80,
-        ),
-        child: Column(
-          children: [
-            isApplied
-                ? Container(
-                    width: double.infinity,
-                    margin: EdgeInsets.only(bottom: 30),
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 24,
-                      vertical: 8,
-                    ),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(48),
-                      color: Color(0xffECEDF1),
-                    ),
-                    child: Text(
-                      'You have applied this job and the\nrecruiter will contact you',
-                      textAlign: TextAlign.center,
-                      style: greyTextStyle.copyWith(),
-                    ),
-                  )
-                : Container(),
-            Image.network(
-              widget.job.companyLogo,
-              width: 60,
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            Text(
-              widget.job.name,
-              style: blackTextStyle.copyWith(
-                fontSize: 20,
-                fontWeight: semiBold,
+      return Column(
+        children: [
+          if (isApplied)
+            Container(
+              width: double.infinity,
+              margin: EdgeInsets.only(
+                bottom: SizeConfig.scaleHeight(30),
+              ),
+              padding: EdgeInsets.symmetric(
+                horizontal: SizeConfig.scaleWidth(24),
+                vertical: SizeConfig.scaleHeight(8),
+              ),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(
+                  SizeConfig.scaleWidth(48),
+                ),
+                color: Color(0xffECEDF1),
+              ),
+              child: Text(
+                'You have applied this job and the\nrecruiter will contact you',
+                textAlign: TextAlign.center,
+                style: greyTextStyle.copyWith(
+                  fontSize: SizeConfig.scaleText(14),
+                ),
               ),
             ),
-            SizedBox(
-              height: 2,
+          Image.network(
+            widget.job.companyLogo,
+            width: SizeConfig.scaleWidth(60),
+          ),
+          SizedBox(
+            height: SizeConfig.scaleHeight(20),
+          ),
+          Text(
+            widget.job.name,
+            style: blackTextStyle.copyWith(
+              fontSize: 20,
+              fontWeight: semiBold,
             ),
-            Text(
-              '${widget.job.companyName} • ${widget.job.location}',
-              style: greyTextStyle,
-            ),
-          ],
-        ),
+          ),
+          SizedBox(
+            height: SizeConfig.scaleHeight(2),
+          ),
+          Text(
+            '${widget.job.companyName} • ${widget.job.location}',
+            style: greyTextStyle,
+          ),
+        ],
       );
     }
 
     Widget detailItem(String text) {
       return Container(
         margin: EdgeInsets.only(
-          top: 16,
+          top: SizeConfig.scaleHeight(16),
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -80,10 +83,10 @@ class _DetailPageState extends State<DetailPage> {
             Icon(
               Icons.adjust,
               color: primaryColor,
-              size: 12,
+              size: SizeConfig.scaleWidth(12),
             ),
             SizedBox(
-              width: 8,
+              width: SizeConfig.scaleWidth(8),
             ),
             Expanded(
               child: Text(
@@ -99,73 +102,70 @@ class _DetailPageState extends State<DetailPage> {
     }
 
     Widget aboutJob() {
-      return Container(
-        margin: EdgeInsets.only(
-          top: 30,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'About the job',
-              style: blackTextStyle.copyWith(
-                fontWeight: medium,
-              ),
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            height: SizeConfig.scaleHeight(30),
+          ),
+          Text(
+            'About the job',
+            style: blackTextStyle.copyWith(
+              fontWeight: medium,
             ),
-            Column(
-              children:
-                  widget.job.about.map((about) => detailItem(about)).toList(),
-            ),
-          ],
-        ),
+          ),
+          Column(
+            children:
+                widget.job.about.map((about) => detailItem(about)).toList(),
+          ),
+        ],
       );
     }
 
     Widget qualifications() {
-      return Container(
-        margin: EdgeInsets.only(
-          top: 30,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Qualifications',
-              style: blackTextStyle.copyWith(
-                fontWeight: medium,
-              ),
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            height: SizeConfig.scaleHeight(30),
+          ),
+          Text(
+            'Qualifications',
+            style: blackTextStyle.copyWith(
+              fontWeight: medium,
             ),
-            Column(
-              children: widget.job.qualifications
-                  .map((qualification) => detailItem(qualification))
-                  .toList(),
-            ),
-          ],
-        ),
+          ),
+          Column(
+            children: widget.job.qualifications
+                .map((qualification) => detailItem(qualification))
+                .toList(),
+          ),
+        ],
       );
     }
 
     Widget responsibilities() {
-      return Container(
-        margin: EdgeInsets.only(
-          top: 30,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Responsibilities',
-              style: blackTextStyle.copyWith(
-                fontWeight: medium,
-              ),
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            height: SizeConfig.scaleHeight(30),
+          ),
+          Text(
+            'Responsibilities',
+            style: blackTextStyle.copyWith(
+              fontWeight: medium,
             ),
-            Column(
-              children: widget.job.responsibilities
-                  .map((responsibility) => detailItem(responsibility))
-                  .toList(),
-            ),
-          ],
-        ),
+          ),
+          Column(
+            children: widget.job.responsibilities
+                .map((responsibility) => detailItem(responsibility))
+                .toList(),
+          ),
+          SizedBox(
+            height: SizeConfig.scaleHeight(50),
+          )
+        ],
       );
     }
 
@@ -173,27 +173,28 @@ class _DetailPageState extends State<DetailPage> {
       return Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Container(
-            margin: EdgeInsets.only(top: 50),
-            height: 45,
-            width: 200,
-            child: TextButton(
-              onPressed: () {
-                setState(() {
-                  isApplied = true;
-                });
-              },
-              style: TextButton.styleFrom(
-                backgroundColor: primaryColor,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(66),
+          ElevatedButton(
+            onPressed: () {
+              setState(() {
+                isApplied = true;
+              });
+            },
+            style: ElevatedButton.styleFrom(
+              primary: primaryColor,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(
+                  SizeConfig.scaleWidth(66),
                 ),
               ),
-              child: Text(
-                'Apply for Job',
-                style: whiteTextStyle.copyWith(
-                  fontWeight: medium,
-                ),
+              padding: EdgeInsets.symmetric(
+                vertical: SizeConfig.scaleWidth(12),
+                horizontal: SizeConfig.scaleWidth(60),
+              ),
+            ),
+            child: Text(
+              'Apply for Job',
+              style: whiteTextStyle.copyWith(
+                fontWeight: medium,
               ),
             ),
           ),
@@ -205,27 +206,28 @@ class _DetailPageState extends State<DetailPage> {
       return Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Container(
-            margin: EdgeInsets.only(top: 50),
-            height: 45,
-            width: 200,
-            child: TextButton(
-              onPressed: () {
-                setState(() {
-                  isApplied = false;
-                });
-              },
-              style: TextButton.styleFrom(
-                backgroundColor: redColor,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(66),
+          TextButton(
+            onPressed: () {
+              setState(() {
+                isApplied = false;
+              });
+            },
+            style: ElevatedButton.styleFrom(
+              primary: redColor,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(
+                  SizeConfig.scaleWidth(66),
                 ),
               ),
-              child: Text(
-                'Cancel Apply',
-                style: whiteTextStyle.copyWith(
-                  fontWeight: medium,
-                ),
+              padding: EdgeInsets.symmetric(
+                vertical: SizeConfig.scaleWidth(12),
+                horizontal: SizeConfig.scaleWidth(60),
+              ),
+            ),
+            child: Text(
+              'Cancel Apply',
+              style: whiteTextStyle.copyWith(
+                fontWeight: medium,
               ),
             ),
           ),
@@ -235,15 +237,12 @@ class _DetailPageState extends State<DetailPage> {
 
     Widget messageButton() {
       return Container(
-        margin: EdgeInsets.only(
-          top: 20,
-          bottom: 35,
-        ),
         child: TextButton(
           onPressed: () {},
           child: Text(
             'Message Recruiter',
             style: greyTextStyle.copyWith(
+              fontSize: SizeConfig.scaleText(16),
               fontWeight: medium,
             ),
           ),
@@ -252,10 +251,13 @@ class _DetailPageState extends State<DetailPage> {
     }
 
     return Scaffold(
-      body: Center(
+      body: SafeArea(
+        bottom: false,
         child: ListView(
+          physics: BouncingScrollPhysics(),
           padding: EdgeInsets.symmetric(
-            horizontal: defaultMargin,
+            horizontal: SizeConfig.scaleWidth(defaultMargin),
+            vertical: SizeConfig.scaleHeight(30),
           ),
           children: [
             header(),

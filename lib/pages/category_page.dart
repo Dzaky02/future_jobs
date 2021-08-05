@@ -19,84 +19,6 @@ class CategoryPage extends StatelessWidget {
     SizeConfig().init(context);
     var jobProvider = Provider.of<JobProvider>(context);
 
-    Widget companies() {
-      return Container(
-        width: double.infinity,
-        margin: EdgeInsets.only(
-          top: SizeConfig.scaleHeight(30),
-          left: SizeConfig.scaleWidth(defaultMargin),
-          right: SizeConfig.scaleWidth(defaultMargin),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Big Companies',
-              style: blackTextStyle.copyWith(
-                fontSize: SizeConfig.scaleText(16),
-              ),
-            ),
-            SizedBox(
-              height: SizeConfig.scaleHeight(24),
-            ),
-            FutureBuilder<List<JobModel>>(
-              future: jobProvider.getJobsByCategory(category.name),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.done) {
-                  return Column(
-                    children: snapshot.data.map((job) => JobTile(job)).toList(),
-                  );
-                }
-
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
-              },
-            ),
-          ],
-        ),
-      );
-    }
-
-    Widget newStartups() {
-      return Container(
-        width: double.infinity,
-        margin: EdgeInsets.only(
-          top: SizeConfig.scaleHeight(20),
-          left: SizeConfig.scaleWidth(defaultMargin),
-          right: SizeConfig.scaleWidth(defaultMargin),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'New Startups',
-              style: blackTextStyle.copyWith(
-                fontSize: SizeConfig.scaleText(16),
-              ),
-            ),
-            SizedBox(
-              height: SizeConfig.scaleHeight(24),
-            ),
-            FutureBuilder<List<JobModel>>(
-              future: jobProvider.getJobs(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.done) {
-                  return Column(
-                    children: snapshot.data.map((job) => JobTile(job)).toList(),
-                  );
-                }
-
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
-              },
-            ),
-          ],
-        ),
-      );
-    }
-
     SliverAppBar header() {
       return SliverAppBar(
         elevation: 4,
@@ -156,6 +78,84 @@ class CategoryPage extends StatelessWidget {
           stretchModes: const <StretchMode>[
             StretchMode.zoomBackground,
             StretchMode.fadeTitle,
+          ],
+        ),
+      );
+    }
+
+    Widget companies() {
+      return Container(
+        width: double.infinity,
+        margin: EdgeInsets.only(
+          top: SizeConfig.scaleHeight(30),
+          left: SizeConfig.scaleWidth(defaultMargin),
+          right: SizeConfig.scaleWidth(defaultMargin),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Big Companies',
+              style: blackTextStyle.copyWith(
+                fontSize: SizeConfig.scaleText(16),
+              ),
+            ),
+            SizedBox(
+              height: SizeConfig.scaleHeight(24),
+            ),
+            FutureBuilder<List<JobModel>>(
+              future: jobProvider.getJobsByCategory(category.name),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  return Column(
+                    children: snapshot.data.map((job) => JobTile(job)).toList(),
+                  );
+                }
+
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              },
+            ),
+          ],
+        ),
+      );
+    }
+
+    Widget newStartups() {
+      return Container(
+        width: double.infinity,
+        margin: EdgeInsets.only(
+          top: SizeConfig.scaleHeight(10),
+          left: SizeConfig.scaleWidth(defaultMargin),
+          right: SizeConfig.scaleWidth(defaultMargin),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'New Startups',
+              style: blackTextStyle.copyWith(
+                fontSize: SizeConfig.scaleText(16),
+              ),
+            ),
+            SizedBox(
+              height: SizeConfig.scaleHeight(24),
+            ),
+            FutureBuilder<List<JobModel>>(
+              future: jobProvider.getJobs(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  return Column(
+                    children: snapshot.data.map((job) => JobTile(job)).toList(),
+                  );
+                }
+
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              },
+            ),
           ],
         ),
       );

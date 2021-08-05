@@ -150,9 +150,6 @@ class HomePage extends StatelessWidget {
                   return ListView(
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
-                    padding: EdgeInsets.only(
-                      bottom: SizeConfig.scaleHeight(20),
-                    ),
                     children: snapshot.data.map((job) => JobTile(job)).toList(),
                   );
                 }
