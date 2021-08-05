@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:future_jobs/models/category_model.dart';
 import 'package:future_jobs/models/job_model.dart';
 import 'package:future_jobs/providers/job_provider.dart';
+import 'package:future_jobs/size_config.dart';
 import 'package:future_jobs/theme.dart';
 import 'package:future_jobs/widgets/job_tile.dart';
 import 'package:provider/provider.dart';
@@ -15,59 +16,16 @@ class CategoryPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     var jobProvider = Provider.of<JobProvider>(context);
-
-    Widget header() {
-      return Container(
-        height: 270,
-        width: double.infinity,
-        padding: EdgeInsets.only(
-          left: defaultMargin,
-          bottom: 30,
-        ),
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            fit: BoxFit.cover,
-            image: NetworkImage(
-              category.imageUrl,
-            ),
-          ),
-          borderRadius: BorderRadius.vertical(
-            bottom: Radius.circular(16),
-          ),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              category.name,
-              style: whiteTextStyle.copyWith(
-                fontSize: 24,
-                fontWeight: semiBold,
-              ),
-            ),
-            SizedBox(
-              height: 2,
-            ),
-            Text(
-              '12,309 available',
-              style: whiteTextStyle.copyWith(
-                fontSize: 16,
-              ),
-            ),
-          ],
-        ),
-      );
-    }
 
     Widget companies() {
       return Container(
         width: double.infinity,
         margin: EdgeInsets.only(
-          top: 30,
-          left: defaultMargin,
-          right: defaultMargin,
+          top: SizeConfig.scaleHeight(30),
+          left: SizeConfig.scaleWidth(defaultMargin),
+          right: SizeConfig.scaleWidth(defaultMargin),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -75,11 +33,11 @@ class CategoryPage extends StatelessWidget {
             Text(
               'Big Companies',
               style: blackTextStyle.copyWith(
-                fontSize: 16,
+                fontSize: SizeConfig.scaleText(16),
               ),
             ),
             SizedBox(
-              height: 24,
+              height: SizeConfig.scaleHeight(24),
             ),
             FutureBuilder<List<JobModel>>(
               future: jobProvider.getJobsByCategory(category.name),
@@ -104,9 +62,9 @@ class CategoryPage extends StatelessWidget {
       return Container(
         width: double.infinity,
         margin: EdgeInsets.only(
-          top: 20,
-          left: defaultMargin,
-          right: defaultMargin,
+          top: SizeConfig.scaleHeight(20),
+          left: SizeConfig.scaleWidth(defaultMargin),
+          right: SizeConfig.scaleWidth(defaultMargin),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -114,11 +72,11 @@ class CategoryPage extends StatelessWidget {
             Text(
               'New Startups',
               style: blackTextStyle.copyWith(
-                fontSize: 16,
+                fontSize: SizeConfig.scaleText(16),
               ),
             ),
             SizedBox(
-              height: 24,
+              height: SizeConfig.scaleHeight(24),
             ),
             FutureBuilder<List<JobModel>>(
               future: jobProvider.getJobs(),
@@ -139,15 +97,86 @@ class CategoryPage extends StatelessWidget {
       );
     }
 
-    return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            header(),
-            companies(),
-            newStartups(),
+    SliverAppBar header() {
+      return SliverAppBar(
+        elevation: 4,
+        pinned: true,
+        stretch: true,
+        centerTitle: true,
+        backgroundColor: primaryColor,
+        collapsedHeight: SizeConfig.scaleHeight(77),
+        expandedHeight: SizeConfig.scaleHeight(270),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            bottom: Radius.circular(
+              SizeConfig.scaleWidth(16),
+            ),
+          ),
+        ),
+        flexibleSpace: FlexibleSpaceBar(
+          centerTitle: true,
+          collapseMode: CollapseMode.parallax,
+          title: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            // crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                category.name,
+                style: whiteTextStyle.copyWith(
+                  fontSize: SizeConfig.scaleText(17),
+                  fontWeight: semiBold,
+                ),
+              ),
+              SizedBox(
+                height: SizeConfig.scaleHeight(2),
+              ),
+              Text(
+                '12,309 available',
+                style: whiteTextStyle.copyWith(
+                  fontSize: SizeConfig.scaleText(12),
+                ),
+              ),
+            ],
+          ),
+          // titlePadding: EdgeInsets.symmetric(
+          //   horizontal: SizeConfig.scaleWidth(defaultMargin),
+          //   vertical: SizeConfig.scaleHeight(30),
+          // ),
+          background: ClipRRect(
+            borderRadius: BorderRadius.vertical(
+              bottom: Radius.circular(
+                SizeConfig.scaleWidth(16),
+              ),
+            ),
+            child: Image.network(
+              category.imageUrl,
+              fit: BoxFit.cover,
+            ),
+          ),
+          stretchModes: const <StretchMode>[
+            StretchMode.zoomBackground,
+            StretchMode.fadeTitle,
           ],
         ),
+      );
+    }
+
+    return Scaffold(
+      body: CustomScrollView(
+        physics: BouncingScrollPhysics(
+          parent: AlwaysScrollableScrollPhysics(),
+        ),
+        slivers: [
+          header(),
+          SliverList(
+            delegate: SliverChildListDelegate(
+              [
+                companies(),
+                newStartups(),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
