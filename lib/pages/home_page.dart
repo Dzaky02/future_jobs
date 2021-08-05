@@ -3,65 +3,62 @@ import 'package:future_jobs/models/category_model.dart';
 import 'package:future_jobs/models/job_model.dart';
 import 'package:future_jobs/providers/category_provider.dart';
 import 'package:future_jobs/providers/job_provider.dart';
+import 'package:future_jobs/providers/user_provider.dart';
+import 'package:future_jobs/size_config.dart';
 import 'package:future_jobs/theme.dart';
 import 'package:future_jobs/widgets/category_card.dart';
 import 'package:future_jobs/widgets/job_tile.dart';
 import 'package:provider/provider.dart';
-import 'package:future_jobs/providers/user_provider.dart';
 
 class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     var userProvider = Provider.of<UserProvider>(context);
     var categoryProvider = Provider.of<CategoryProvider>(context);
     var jobProvider = Provider.of<JobProvider>(context);
 
     Widget header() {
-      return Container(
-        margin: EdgeInsets.only(
-          top: 30,
-          left: defaultMargin,
-          right: defaultMargin,
+      return Padding(
+        padding: EdgeInsets.only(
+          top: SizeConfig.scaleHeight(30),
+          left: SizeConfig.scaleWidth(defaultMargin),
+          right: SizeConfig.scaleWidth(defaultMargin),
         ),
-        child: Column(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Howdy',
-                      style: greyTextStyle.copyWith(
-                        fontSize: 16,
-                      ),
-                    ),
-                    Text(
-                      userProvider.user.name,
-                      style: blackTextStyle.copyWith(
-                        fontSize: 24,
-                        fontWeight: semiBold,
-                      ),
-                    ),
-                  ],
-                ),
-                Container(
-                  width: 58,
-                  height: 58,
-                  padding: EdgeInsets.all(4),
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: primaryColor,
-                    ),
+                Text(
+                  'Howdy',
+                  style: greyTextStyle.copyWith(
+                    fontSize: SizeConfig.scaleText(16),
                   ),
-                  child: Image.asset(
-                    'assets/image_profile.png',
+                ),
+                Text(
+                  userProvider.user.name,
+                  style: blackTextStyle.copyWith(
+                    fontSize: SizeConfig.scaleText(24),
+                    fontWeight: semiBold,
                   ),
                 ),
               ],
-            )
+            ),
+            Container(
+              width: SizeConfig.scaleWidth(58),
+              padding: EdgeInsets.all(SizeConfig.scaleWidth(4)),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: primaryColor,
+                ),
+              ),
+              child: Image.asset(
+                'assets/image_profile.png',
+              ),
+            ),
           ],
         ),
       );
@@ -72,24 +69,24 @@ class HomePage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
-            height: 30,
+            height: SizeConfig.scaleHeight(30),
           ),
           Padding(
             padding: EdgeInsets.symmetric(
-              horizontal: defaultMargin,
+              horizontal: SizeConfig.scaleWidth(defaultMargin),
             ),
             child: Text(
               'Hot Categories',
               style: blackTextStyle.copyWith(
-                fontSize: 16,
+                fontSize: SizeConfig.scaleText(16),
               ),
             ),
           ),
           SizedBox(
-            height: 16,
+            height: SizeConfig.scaleHeight(16),
           ),
           Container(
-            height: 200,
+            height: SizeConfig.scaleHeight(200),
             child: FutureBuilder<List<CategoryModel>>(
               future: categoryProvider.getCategories(),
               builder: (context, snapshot) {
@@ -98,11 +95,18 @@ class HomePage extends StatelessWidget {
                   int index = -1;
                   return ListView(
                     scrollDirection: Axis.horizontal,
+                    physics: BouncingScrollPhysics(
+                      parent: AlwaysScrollableScrollPhysics(),
+                    ),
                     children: snapshot.data.map((category) {
                       index++;
                       return Container(
+                        width: SizeConfig.scaleWidth(150),
+                        height: SizeConfig.scaleHeight(200),
                         margin: EdgeInsets.only(
-                          left: index == 0 ? defaultMargin : 0,
+                          left: index == 0
+                              ? SizeConfig.scaleWidth(defaultMargin)
+                              : 0,
                         ),
                         child: CategoryCard(category),
                       );
@@ -173,16 +177,6 @@ class HomePage extends StatelessWidget {
       );
     }
 
-    Widget body() {
-      return ListView(
-        children: [
-          header(),
-          hotCategories(),
-          justPosted(),
-        ],
-      );
-    }
-
     Widget bottomNavBar() {
       return BottomNavigationBar(
         elevation: 0,
@@ -215,6 +209,17 @@ class HomePage extends StatelessWidget {
             ),
             label: '',
           ),
+        ],
+      );
+    }
+
+    Widget body() {
+      return ListView(
+        physics: BouncingScrollPhysics(),
+        children: [
+          header(),
+          hotCategories(),
+          justPosted(),
         ],
       );
     }
