@@ -1,10 +1,11 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:future_jobs/models/user_model.dart';
-import 'package:future_jobs/theme.dart';
-import 'package:provider/provider.dart';
 import 'package:future_jobs/providers/auth_provider.dart';
 import 'package:future_jobs/providers/user_provider.dart';
+import 'package:future_jobs/size_config.dart';
+import 'package:future_jobs/theme.dart';
+import 'package:provider/provider.dart';
 
 class SignUpPage extends StatefulWidget {
   @override
@@ -21,6 +22,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     var authProvider = Provider.of<AuthProvider>(context);
     var userProvider = Provider.of<UserProvider>(context);
 
@@ -28,45 +30,80 @@ class _SignUpPageState extends State<SignUpPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           backgroundColor: Colors.red,
-          content: Text(message),
+          content: Text(
+            message,
+            style: whiteTextStyle.copyWith(
+              fontSize: SizeConfig.scaleText(16),
+            ),
+          ),
         ),
       );
     }
 
+    void submitSignUp() async {
+      if (nameController.text.isEmpty ||
+          emailController.text.isEmpty ||
+          passwordController.text.isEmpty ||
+          goalController.text.isEmpty) {
+        showError('Semua field harus diisi');
+      } else {
+        setState(() {
+          isLoading = true;
+        });
+
+        UserModel user = await authProvider.register(
+          emailController.text,
+          passwordController.text,
+          nameController.text,
+          goalController.text,
+        );
+
+        setState(() {
+          isLoading = false;
+        });
+
+        if (user == null) {
+          showError('email sudah terdaftar');
+        } else {
+          userProvider.user = user;
+          Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+        }
+      }
+    }
+
     Widget header() {
-      return Container(
-        margin: EdgeInsets.only(top: 30),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Sign Up',
-              style: greyTextStyle.copyWith(
-                fontSize: 16,
-              ),
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Sign Up',
+            style: greyTextStyle.copyWith(
+              fontSize: SizeConfig.scaleText(16),
             ),
-            SizedBox(
-              height: 2,
+          ),
+          SizedBox(
+            height: SizeConfig.scaleHeight(2),
+          ),
+          Text(
+            'Begin New Journey',
+            style: blackTextStyle.copyWith(
+              fontSize: SizeConfig.scaleText(24),
+              fontWeight: semiBold,
             ),
-            Text(
-              'Begin New Journey',
-              style: blackTextStyle.copyWith(
-                fontSize: 24,
-                fontWeight: semiBold,
-              ),
-            ),
-          ],
-        ),
+          ),
+          SizedBox(
+            height: SizeConfig.scaleHeight(30),
+          ),
+        ],
       );
     }
 
     Widget inputImage() {
       return Center(
         child: Container(
-          width: 120,
-          height: 120,
-          margin: EdgeInsets.only(top: 50),
-          padding: EdgeInsets.all(8),
+          width: SizeConfig.scaleText(120),
+          height: SizeConfig.scaleText(120),
+          padding: EdgeInsets.all(SizeConfig.scaleWidth(8)),
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             border: Border.all(
@@ -81,248 +118,153 @@ class _SignUpPageState extends State<SignUpPage> {
     }
 
     Widget inputName() {
-      return Container(
-        margin: EdgeInsets.only(top: 50),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Full Name',
-              style: greyTextStyle.copyWith(
-                fontSize: 16,
-              ),
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            height: SizeConfig.scaleHeight(20),
+          ),
+          Text(
+            'Full Name',
+            style: greyTextStyle.copyWith(
+              fontSize: SizeConfig.scaleText(16),
             ),
-            SizedBox(
-              height: 8,
+          ),
+          SizedBox(
+            height: SizeConfig.scaleHeight(8),
+          ),
+          TextFormField(
+            controller: nameController,
+            cursorColor: primaryColor,
+            onChanged: (value) {
+              setState(() {});
+            },
+            style: purpleTextStyle.copyWith(
+              fontSize: SizeConfig.scaleText(16),
             ),
-            TextFormField(
-              controller: nameController,
-              cursorColor: primaryColor,
-              onChanged: (value) {
-                setState(() {});
-              },
-              decoration: InputDecoration(
-                contentPadding: EdgeInsets.only(left: 28, bottom: 20, top: 20),
-                fillColor: Color(0xffF1F0F5),
-                filled: true,
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20),
-                  borderSide: BorderSide.none,
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20),
-                  borderSide: BorderSide(
-                    color: primaryColor,
-                  ),
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                hintText: '',
-              ),
-              style: purpleTextStyle,
-            ),
-          ],
-        ),
+            textInputAction: TextInputAction.next,
+            decoration: kInputDecorTheme(),
+          ),
+        ],
       );
     }
 
     Widget inputEmail() {
-      return Container(
-        margin: EdgeInsets.only(top: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Email Address',
-              style: greyTextStyle.copyWith(
-                fontSize: 16,
-              ),
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            height: SizeConfig.scaleHeight(20),
+          ),
+          Text(
+            'Email Address',
+            style: greyTextStyle.copyWith(
+              fontSize: SizeConfig.scaleText(16),
             ),
-            SizedBox(
-              height: 8,
-            ),
-            TextFormField(
-              controller: emailController,
-              cursorColor: primaryColor,
-              onChanged: (value) {
-                setState(() {});
-              },
-              decoration: InputDecoration(
-                contentPadding: EdgeInsets.only(left: 28, bottom: 20, top: 20),
-                fillColor: Color(0xffF1F0F5),
-                filled: true,
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20),
-                  borderSide: BorderSide.none,
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20),
-                  borderSide: BorderSide(
-                    color: EmailValidator.validate(emailController.text)
-                        ? primaryColor
-                        : Colors.red,
-                  ),
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                hintText: '',
-              ),
-              style: EmailValidator.validate(emailController.text)
-                  ? purpleTextStyle
-                  : redTextStyle,
-            ),
-          ],
-        ),
+          ),
+          SizedBox(
+            height: SizeConfig.scaleHeight(8),
+          ),
+          TextFormField(
+            controller: emailController,
+            cursorColor: primaryColor,
+            onChanged: (value) {
+              setState(() {});
+            },
+            keyboardType: TextInputType.emailAddress,
+            textInputAction: TextInputAction.next,
+            decoration: kInputDecorTheme(),
+            style: EmailValidator.validate(emailController.text)
+                ? purpleTextStyle.copyWith(fontSize: SizeConfig.scaleText(16))
+                : redTextStyle.copyWith(fontSize: SizeConfig.scaleText(16)),
+          ),
+        ],
       );
     }
 
     Widget inputPassword() {
-      return Container(
-        margin: EdgeInsets.only(top: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Password',
-              style: greyTextStyle.copyWith(
-                fontSize: 16,
-              ),
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            height: SizeConfig.scaleHeight(20),
+          ),
+          Text(
+            'Password',
+            style: greyTextStyle.copyWith(
+              fontSize: SizeConfig.scaleText(16),
             ),
-            SizedBox(
-              height: 8,
+          ),
+          SizedBox(
+            height: SizeConfig.scaleHeight(8),
+          ),
+          TextFormField(
+            controller: passwordController,
+            cursorColor: primaryColor,
+            obscureText: true,
+            onChanged: (value) {
+              setState(() {});
+            },
+            textInputAction: TextInputAction.next,
+            decoration: kInputDecorTheme(),
+            style: purpleTextStyle.copyWith(
+              fontSize: SizeConfig.scaleText(16),
             ),
-            TextFormField(
-              controller: passwordController,
-              cursorColor: primaryColor,
-              obscureText: true,
-              onChanged: (value) {
-                setState(() {});
-              },
-              decoration: InputDecoration(
-                contentPadding: EdgeInsets.only(left: 28, bottom: 20, top: 20),
-                fillColor: Color(0xffF1F0F5),
-                filled: true,
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20),
-                  borderSide: BorderSide.none,
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20),
-                  borderSide: BorderSide(
-                    color: primaryColor,
-                  ),
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                hintText: '',
-              ),
-              style: purpleTextStyle,
-            ),
-          ],
-        ),
+          ),
+        ],
       );
     }
 
     Widget inputGoal() {
-      return Container(
-        margin: EdgeInsets.only(top: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Your Goal',
-              style: greyTextStyle.copyWith(
-                fontSize: 16,
-              ),
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            height: SizeConfig.scaleHeight(20),
+          ),
+          Text(
+            'Your Goal',
+            style: greyTextStyle.copyWith(
+              fontSize: SizeConfig.scaleText(16),
             ),
-            SizedBox(
-              height: 8,
+          ),
+          SizedBox(
+            height: SizeConfig.scaleHeight(8),
+          ),
+          TextFormField(
+            controller: goalController,
+            cursorColor: primaryColor,
+            onChanged: (value) {
+              setState(() {});
+            },
+            onFieldSubmitted: (_) => submitSignUp,
+            textInputAction: TextInputAction.done,
+            decoration: kInputDecorTheme(),
+            style: purpleTextStyle.copyWith(
+              fontSize: SizeConfig.scaleText(16),
             ),
-            TextFormField(
-              controller: goalController,
-              cursorColor: primaryColor,
-              onChanged: (value) {
-                setState(() {});
-              },
-              decoration: InputDecoration(
-                contentPadding: EdgeInsets.only(left: 28, bottom: 20, top: 20),
-                fillColor: Color(0xffF1F0F5),
-                filled: true,
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20),
-                  borderSide: BorderSide.none,
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20),
-                  borderSide: BorderSide(
-                    color: primaryColor,
-                  ),
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                hintText: '',
-              ),
-              style: purpleTextStyle,
-            ),
-          ],
-        ),
+          ),
+          SizedBox(
+            height: SizeConfig.scaleHeight(40),
+          ),
+        ],
       );
     }
 
     Widget signUpButton() {
       return Container(
-        margin: EdgeInsets.only(top: 40),
-        height: 45,
         width: double.infinity,
         child: isLoading
             ? Center(
                 child: CircularProgressIndicator(),
               )
-            : TextButton(
-                onPressed: () async {
-                  if (nameController.text.isEmpty ||
-                      emailController.text.isEmpty ||
-                      passwordController.text.isEmpty ||
-                      goalController.text.isEmpty) {
-                    showError('Semua field harus diisi');
-                  } else {
-                    setState(() {
-                      isLoading = true;
-                    });
-
-                    UserModel user = await authProvider.register(
-                      emailController.text,
-                      passwordController.text,
-                      nameController.text,
-                      goalController.text,
-                    );
-
-                    setState(() {
-                      isLoading = false;
-                    });
-
-                    if (user == null) {
-                      showError('email sudah terdaftar');
-                    } else {
-                      userProvider.user = user;
-                      Navigator.pushNamedAndRemoveUntil(
-                          context, '/home', (route) => false);
-                    }
-                  }
-                },
-                style: TextButton.styleFrom(
-                  backgroundColor: primaryColor,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(66),
-                  ),
-                ),
+            : ElevatedButton(
+                onPressed: submitSignUp,
+                style: primaryElevatedStyle(),
                 child: Text(
                   'Sign Up',
                   style: whiteTextStyle.copyWith(
+                    fontSize: SizeConfig.scaleText(14),
                     fontWeight: medium,
                   ),
                 ),
@@ -332,7 +274,6 @@ class _SignUpPageState extends State<SignUpPage> {
 
     Widget signInButton() {
       return Container(
-        margin: EdgeInsets.only(top: 20, bottom: 20),
         child: Center(
           child: TextButton(
             onPressed: () {
@@ -341,6 +282,7 @@ class _SignUpPageState extends State<SignUpPage> {
             child: Text(
               'Back to Sign In',
               style: greyTextStyle.copyWith(
+                fontSize: SizeConfig.scaleText(14),
                 fontWeight: light,
               ),
             ),
@@ -351,23 +293,22 @@ class _SignUpPageState extends State<SignUpPage> {
 
     return Scaffold(
       body: SafeArea(
-        child: Container(
-          width: MediaQuery.of(context).size.width,
+        child: ListView(
+          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
           padding: EdgeInsets.symmetric(
-            horizontal: defaultMargin,
+            vertical: SizeConfig.scaleHeight(30),
+            horizontal: SizeConfig.scaleWidth(defaultMargin),
           ),
-          child: ListView(
-            children: [
-              header(),
-              inputImage(),
-              inputName(),
-              inputEmail(),
-              inputPassword(),
-              inputGoal(),
-              signUpButton(),
-              signInButton(),
-            ],
-          ),
+          children: [
+            header(),
+            inputImage(),
+            inputName(),
+            inputEmail(),
+            inputPassword(),
+            inputGoal(),
+            signUpButton(),
+            signInButton(),
+          ],
         ),
       ),
     );

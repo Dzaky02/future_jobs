@@ -1,3 +1,4 @@
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:future_jobs/models/user_model.dart';
 import 'package:future_jobs/providers/auth_provider.dart';
@@ -19,7 +20,8 @@ class _SignInPageState extends State<SignInPage> {
 
   @override
   Widget build(BuildContext context) {
-    SizeConfig().init(context);
+    SizeConfig sizeConfig = SizeConfig();
+    sizeConfig.init(context);
     var authProvider = Provider.of<AuthProvider>(context);
     var userProvider = Provider.of<UserProvider>(context);
 
@@ -63,7 +65,7 @@ class _SignInPageState extends State<SignInPage> {
       return Center(
         child: Image.asset(
           'assets/image_sign_in.png',
-          height: SizeConfig.scaleHeight(210),
+          height: SizeConfig.scaleHeight(200),
         ),
       );
     }
@@ -84,28 +86,15 @@ class _SignInPageState extends State<SignInPage> {
           SizedBox(
             height: SizeConfig.scaleHeight(8),
           ),
-          Container(
-            width: double.infinity,
-            padding: EdgeInsets.symmetric(
-              vertical: SizeConfig.scaleWidth(11),
-              horizontal: SizeConfig.scaleWidth(20),
-            ),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(100),
-              color: inputFieldColor,
-            ),
-            child: Center(
-              child: TextFormField(
-                controller: emailController,
-                cursorColor: primaryColor,
-                style: purpleTextStyle.copyWith(
-                  fontSize: SizeConfig.scaleText(16),
-                ),
-                decoration: InputDecoration.collapsed(
-                  hintText: '',
-                ),
-              ),
-            ),
+          TextFormField(
+            controller: emailController,
+            cursorColor: primaryColor,
+            style: EmailValidator.validate(emailController.text)
+                ? purpleTextStyle.copyWith(fontSize: SizeConfig.scaleText(16))
+                : redTextStyle.copyWith(fontSize: SizeConfig.scaleText(16)),
+            keyboardType: TextInputType.emailAddress,
+            textInputAction: TextInputAction.next,
+            decoration: kInputDecorTheme(),
           ),
         ],
       );
@@ -127,29 +116,15 @@ class _SignInPageState extends State<SignInPage> {
           SizedBox(
             height: SizeConfig.scaleHeight(8),
           ),
-          Container(
-            width: double.infinity,
-            padding: EdgeInsets.symmetric(
-              vertical: SizeConfig.scaleWidth(11),
-              horizontal: SizeConfig.scaleWidth(20),
+          TextFormField(
+            controller: passwordController,
+            cursorColor: primaryColor,
+            obscureText: true,
+            style: purpleTextStyle.copyWith(
+              fontSize: SizeConfig.scaleText(16),
             ),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(100),
-              color: inputFieldColor,
-            ),
-            child: Center(
-              child: TextFormField(
-                controller: passwordController,
-                cursorColor: primaryColor,
-                obscureText: true,
-                style: purpleTextStyle.copyWith(
-                  fontSize: SizeConfig.scaleText(16),
-                ),
-                decoration: InputDecoration.collapsed(
-                  hintText: '',
-                ),
-              ),
-            ),
+            textInputAction: TextInputAction.done,
+            decoration: kInputDecorTheme(),
           ),
           SizedBox(
             height: SizeConfig.scaleHeight(40),
@@ -196,13 +171,7 @@ class _SignInPageState extends State<SignInPage> {
                     }
                   }
                 },
-                style: ElevatedButton.styleFrom(
-                  primary: primaryColor,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(66),
-                  ),
-                  padding: EdgeInsets.all(SizeConfig.scaleWidth(12)),
-                ),
+                style: primaryElevatedStyle(),
                 child: Text(
                   'Sign In',
                   style: whiteTextStyle.copyWith(
@@ -234,11 +203,10 @@ class _SignInPageState extends State<SignInPage> {
     return Scaffold(
       body: SafeArea(
         child: ListView(
-          shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
+          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
           padding: EdgeInsets.symmetric(
             vertical: SizeConfig.scaleHeight(30),
-            horizontal: SizeConfig.scaleWidth(24),
+            horizontal: SizeConfig.scaleWidth(defaultMargin),
           ),
           children: [
             header(),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:future_jobs/size_config.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 // Note: Constant Values
@@ -39,3 +40,47 @@ FontWeight light = FontWeight.w300;
 FontWeight medium = FontWeight.w500;
 FontWeight semiBold = FontWeight.w700;
 FontWeight bold = FontWeight.bold;
+
+// Decoration
+InputDecoration kInputDecorTheme() {
+  return InputDecoration(
+    contentPadding: EdgeInsets.symmetric(
+      vertical: SizeConfig.scaleWidth(10),
+      horizontal: SizeConfig.scaleWidth(20),
+    ),
+    fillColor: Color(0xffF1F0F5),
+    filled: true,
+    enabledBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(SizeConfig.scaleWidth(100)),
+      borderSide: BorderSide.none,
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(SizeConfig.scaleWidth(100)),
+      borderSide: BorderSide(
+        color: primaryColor,
+      ),
+    ),
+    errorBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(SizeConfig.scaleWidth(100)),
+      borderSide: BorderSide(
+        color: redColor,
+      ),
+    ),
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(SizeConfig.scaleWidth(100)),
+    ),
+    hintText: '',
+  );
+}
+
+ButtonStyle primaryElevatedStyle() {
+  return ElevatedButton.styleFrom(
+    primary: primaryColor,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(
+        SizeConfig.scaleWidth(66),
+      ),
+    ),
+    padding: EdgeInsets.all(SizeConfig.scaleWidth(13)),
+  );
+}
