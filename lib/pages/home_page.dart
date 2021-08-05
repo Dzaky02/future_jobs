@@ -127,9 +127,9 @@ class HomePage extends StatelessWidget {
     Widget justPosted() {
       return Container(
         padding: EdgeInsets.only(
-          left: defaultMargin,
-          right: defaultMargin,
-          top: 30,
+          left: SizeConfig.scaleWidth(defaultMargin),
+          right: SizeConfig.scaleWidth(defaultMargin),
+          top: SizeConfig.scaleHeight(30),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -137,41 +137,30 @@ class HomePage extends StatelessWidget {
             Text(
               'Just Posted',
               style: blackTextStyle.copyWith(
-                fontSize: 16,
+                fontSize: SizeConfig.scaleText(16),
               ),
             ),
             SizedBox(
-              height: 24,
+              height: SizeConfig.scaleHeight(24),
             ),
             FutureBuilder<List<JobModel>>(
               future: jobProvider.getJobs(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.done) {
-                  return Column(
+                  return ListView(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    padding: EdgeInsets.only(
+                      bottom: SizeConfig.scaleHeight(20),
+                    ),
                     children: snapshot.data.map((job) => JobTile(job)).toList(),
                   );
                 }
-
                 return Center(
                   child: CircularProgressIndicator(),
                 );
               },
             ),
-            // JobTile(
-            //   companyLogo: 'assets/icon_google.png',
-            //   name: 'Front-End Developer',
-            //   companyName: 'Google',
-            // ),
-            // JobTile(
-            //   companyLogo: 'assets/icon_instagram.png',
-            //   name: 'UI Designer',
-            //   companyName: 'Instagram',
-            // ),
-            // JobTile(
-            //   companyLogo: 'assets/icon_facebook.png',
-            //   name: 'Data Scientist',
-            //   companyName: 'Facebook',
-            // ),
           ],
         ),
       );

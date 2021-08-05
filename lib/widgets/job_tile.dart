@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:future_jobs/models/job_model.dart';
 import 'package:future_jobs/pages/detail_page.dart';
+import 'package:future_jobs/size_config.dart';
 
 import '../theme.dart';
 
@@ -11,7 +12,7 @@ class JobTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return InkWell(
       onTap: () {
         Navigator.push(
           context,
@@ -25,10 +26,10 @@ class JobTile extends StatelessWidget {
         children: [
           Image.network(
             job.companyLogo,
-            width: 44,
+            width: SizeConfig.scaleWidth(44),
           ),
           SizedBox(
-            width: 24,
+            width: SizeConfig.scaleWidth(24),
           ),
           Expanded(
             child: Column(
@@ -37,25 +38,25 @@ class JobTile extends StatelessWidget {
                 Text(
                   job.name,
                   style: blackTextStyle.copyWith(
-                    fontSize: 16,
+                    fontSize: SizeConfig.scaleText(16),
                     fontWeight: medium,
                   ),
                 ),
                 SizedBox(
-                  height: 2,
+                  height: SizeConfig.scaleHeight(2),
                 ),
                 Text(
                   job.companyName,
                   style: greyTextStyle,
                 ),
                 SizedBox(
-                  height: 18,
+                  height: SizeConfig.scaleHeight(14),
                 ),
                 Divider(
                   thickness: 1,
                 ),
                 SizedBox(
-                  height: 16,
+                  height: SizeConfig.scaleHeight(12),
                 ),
               ],
             ),
