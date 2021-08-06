@@ -46,18 +46,23 @@ class CategoryCard extends StatelessWidget {
                 height: SizeConfig.scaleHeight(200),
                 loadingBuilder: (context, child, loadingProgress) {
                   if (loadingProgress == null) return child;
-                  return Center(
-                      child: Padding(
+                  return Container(
+                    width: SizeConfig.scaleWidth(150),
+                    height: SizeConfig.scaleHeight(200),
                     padding: EdgeInsets.all(
-                      SizeConfig.scaleWidth(16),
+                      SizeConfig.scaleWidth(12),
                     ),
-                    child: CircularProgressIndicator(
-                      value: loadingProgress.expectedTotalBytes != null
-                          ? loadingProgress.cumulativeBytesLoaded /
-                              loadingProgress.expectedTotalBytes
-                          : null,
+                    color: Colors.black12,
+                    child: Center(
+                      child: CircularProgressIndicator(
+                        color: primaryColor,
+                        value: loadingProgress.expectedTotalBytes != null
+                            ? loadingProgress.cumulativeBytesLoaded /
+                                loadingProgress.expectedTotalBytes
+                            : null,
+                      ),
                     ),
-                  ));
+                  );
                 },
               ),
             ),
