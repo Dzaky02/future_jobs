@@ -57,7 +57,7 @@ class _DetailPageState extends State<DetailPage> {
           Text(
             widget.job.name,
             style: blackTextStyle.copyWith(
-              fontSize: 20,
+              fontSize: SizeConfig.scaleText(20),
               fontWeight: semiBold,
             ),
           ),
@@ -66,7 +66,9 @@ class _DetailPageState extends State<DetailPage> {
           ),
           Text(
             '${widget.job.companyName} • ${widget.job.location}',
-            style: greyTextStyle,
+            style: greyTextStyle.copyWith(
+              fontSize: SizeConfig.scaleText(14),
+            ),
           ),
         ],
       );
@@ -92,6 +94,7 @@ class _DetailPageState extends State<DetailPage> {
               child: Text(
                 text,
                 style: blackTextStyle.copyWith(
+                  fontSize: SizeConfig.scaleText(15),
                   fontWeight: light,
                 ),
               ),
@@ -188,12 +191,13 @@ class _DetailPageState extends State<DetailPage> {
               ),
               padding: EdgeInsets.symmetric(
                 vertical: SizeConfig.scaleWidth(12),
-                horizontal: SizeConfig.scaleWidth(60),
+                horizontal: SizeConfig.scaleWidth(53),
               ),
             ),
             child: Text(
               'Apply for Job',
               style: whiteTextStyle.copyWith(
+                fontSize: SizeConfig.scaleText(16),
                 fontWeight: medium,
               ),
             ),
@@ -221,12 +225,13 @@ class _DetailPageState extends State<DetailPage> {
               ),
               padding: EdgeInsets.symmetric(
                 vertical: SizeConfig.scaleWidth(12),
-                horizontal: SizeConfig.scaleWidth(60),
+                horizontal: SizeConfig.scaleWidth(53),
               ),
             ),
             child: Text(
               'Cancel Apply',
               style: whiteTextStyle.copyWith(
+                fontSize: SizeConfig.scaleText(16),
                 fontWeight: medium,
               ),
             ),
