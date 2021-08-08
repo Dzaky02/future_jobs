@@ -39,6 +39,9 @@ dependencies:
   # For using provider state management
   provider: ^5.0.0
 
+  # Using Shared Preferances
+  shared_preferences: ^2.0.6
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
