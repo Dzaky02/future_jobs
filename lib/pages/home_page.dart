@@ -85,12 +85,30 @@ class _HomePageState extends State<HomePage> {
                             AsyncSnapshot<String> snapshot) {
                           switch (snapshot.connectionState) {
                             case ConnectionState.waiting:
-                              return const Text('Getting data...');
+                              return Text(
+                                'Getting data...',
+                                style: blackTextStyle.copyWith(
+                                  fontSize: SizeConfig.scaleText(24),
+                                  fontWeight: semiBold,
+                                ),
+                              );
                             default:
                               if (snapshot.hasError) {
-                                return Text('Error: ${snapshot.error}');
+                                return Text(
+                                  'Error: ${snapshot.error}',
+                                  style: blackTextStyle.copyWith(
+                                    fontSize: SizeConfig.scaleText(24),
+                                    fontWeight: semiBold,
+                                  ),
+                                );
                               } else {
-                                return Text(snapshot.data);
+                                return Text(
+                                  snapshot.data,
+                                  style: blackTextStyle.copyWith(
+                                    fontSize: SizeConfig.scaleText(24),
+                                    fontWeight: semiBold,
+                                  ),
+                                );
                               }
                           }
                         },
