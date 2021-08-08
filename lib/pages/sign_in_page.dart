@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:future_jobs/models/user_model.dart';
 import 'package:future_jobs/providers/auth_provider.dart';
 import 'package:future_jobs/providers/user_provider.dart';
+import 'package:future_jobs/shared/sharedpref_keys.dart';
 import 'package:future_jobs/size_config.dart';
 import 'package:future_jobs/theme.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SignInPage extends StatefulWidget {
   @override
@@ -13,15 +15,40 @@ class SignInPage extends StatefulWidget {
 }
 
 class _SignInPageState extends State<SignInPage> {
+  // Shared Preference
+  Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+
+  // Controller
   TextEditingController emailController = TextEditingController(text: '');
   TextEditingController passwordController = TextEditingController(text: '');
 
   bool isLoading = false;
 
+  Future<void> _setLoginState(UserModel user) async {
+    final SharedPreferences prefs = await _prefs;
+    // final bool isLogin = (prefs.getBool(SharedPrefConfig.IS_LOGIN) ?? false);
+    prefs.setString(SharedPrefConfig.USERNAME, user.name).then(
+      (bool success) {
+        prefs.setBool(SharedPrefConfig.IS_LOGIN, true).then(
+          (bool success) {
+            setState(() {
+              isLoading = false;
+            });
+            Navigator.pushNamedAndRemoveUntil(
+                context, '/home', (route) => false);
+            return true;
+          },
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    SizeConfig sizeConfig = SizeConfig();
-    sizeConfig.init(context);
+    // Size Config
+    SizeConfig().init(context);
+
+    // Provider
     var authProvider = Provider.of<AuthProvider>(context);
     var userProvider = Provider.of<UserProvider>(context);
 
@@ -158,16 +185,14 @@ class _SignInPageState extends State<SignInPage> {
                       passwordController.text,
                     );
 
-                    setState(() {
-                      isLoading = false;
-                    });
-
                     if (user == null) {
+                      setState(() {
+                        isLoading = false;
+                      });
                       showError('email atau password salah');
                     } else {
                       userProvider.user = user;
-                      Navigator.pushNamedAndRemoveUntil(
-                          context, '/home', (route) => false);
+                      _setLoginState(user);
                     }
                   }
                 },

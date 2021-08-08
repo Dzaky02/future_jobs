@@ -16,19 +16,6 @@ class _SplashPageState extends State<SplashPage> {
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   Future<bool> _isLogin;
 
-  // Future<void> _checkLoginState() async {
-  //   final SharedPreferences prefs = await _prefs;
-  //   final bool isLogin = (prefs.getBool(SharedPrefConfig.IS_LOGIN) ?? false);
-  //
-  //   setState(() {
-  //     _isLogin = prefs
-  //         .setBool(SharedPrefConfig.IS_LOGIN, isLogin)
-  //         .then((bool success) {
-  //       return isLogin;
-  //     });
-  //   });
-  // }
-
   @override
   void initState() {
     super.initState();
@@ -74,16 +61,17 @@ class _SplashPageState extends State<SplashPage> {
     return FutureBuilder<bool>(
       future: _isLogin,
       builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+        print('IS LOGIN? ${snapshot.data}');
         switch (snapshot.connectionState) {
           case ConnectionState.waiting:
             return _buildLinearProgressIndicator();
           default:
             if (snapshot.hasError) {
               _buildShowSnackBar(snapshot.error.toString());
-              _NavigatePage(context);
+              _NavigatePage(context, '/onboarding');
               return _buildLinearProgressIndicator();
             } else {
-              _NavigatePage(context);
+              _NavigatePage(context, (snapshot.data) ? '/home' : '/onboarding');
               return _buildLinearProgressIndicator();
             }
         }
@@ -109,13 +97,13 @@ class _SplashPageState extends State<SplashPage> {
     );
   }
 
-  Timer _NavigatePage(BuildContext context) {
+  Timer _NavigatePage(BuildContext context, String routeName) {
     return Timer(
       Duration(seconds: 2),
       () {
         Navigator.pushNamedAndRemoveUntil(
           context,
-          '/onboarding',
+          routeName,
           (route) => false,
         );
       },

@@ -4,13 +4,47 @@ import 'package:future_jobs/models/job_model.dart';
 import 'package:future_jobs/providers/category_provider.dart';
 import 'package:future_jobs/providers/job_provider.dart';
 import 'package:future_jobs/providers/user_provider.dart';
+import 'package:future_jobs/shared/sharedpref_keys.dart';
 import 'package:future_jobs/size_config.dart';
 import 'package:future_jobs/theme.dart';
 import 'package:future_jobs/widgets/category_card.dart';
 import 'package:future_jobs/widgets/job_tile.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class HomePage extends StatelessWidget {
+enum SelectedMenu { setting, logout }
+
+class HomePage extends StatefulWidget {
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  // Shared Preferences
+  Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  Future<String> _username;
+
+  Future<void> _logout() async {
+    final SharedPreferences prefs = await _prefs;
+
+    prefs.setBool(SharedPrefConfig.IS_LOGIN, false).then(
+      (bool success) {
+        Navigator.pushNamedAndRemoveUntil(
+            context, '/onboarding', (route) => false);
+        return false;
+      },
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    _username = _prefs.then((SharedPreferences prefs) {
+      return (prefs.getString(SharedPrefConfig.USERNAME) ?? 'No Name');
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -37,26 +71,73 @@ class HomePage extends StatelessWidget {
                     fontSize: SizeConfig.scaleText(16),
                   ),
                 ),
-                Text(
-                  userProvider.user.name,
-                  style: blackTextStyle.copyWith(
-                    fontSize: SizeConfig.scaleText(24),
-                    fontWeight: semiBold,
-                  ),
-                ),
+                (userProvider.user != null)
+                    ? Text(
+                        userProvider.user?.name,
+                        style: blackTextStyle.copyWith(
+                          fontSize: SizeConfig.scaleText(24),
+                          fontWeight: semiBold,
+                        ),
+                      )
+                    : FutureBuilder<String>(
+                        future: _username,
+                        builder: (BuildContext context,
+                            AsyncSnapshot<String> snapshot) {
+                          switch (snapshot.connectionState) {
+                            case ConnectionState.waiting:
+                              return const Text('Getting data...');
+                            default:
+                              if (snapshot.hasError) {
+                                return Text('Error: ${snapshot.error}');
+                              } else {
+                                return Text(snapshot.data);
+                              }
+                          }
+                        },
+                      ),
               ],
             ),
-            Container(
-              width: SizeConfig.scaleWidth(58),
-              padding: EdgeInsets.all(SizeConfig.scaleWidth(4)),
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color: primaryColor,
+            PopupMenuButton<SelectedMenu>(
+              onSelected: (value) {
+                switch (value) {
+                  case SelectedMenu.logout:
+                    _logout();
+                    break;
+                  default:
+                    break;
+                }
+              },
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(12),
                 ),
               ),
-              child: Image.asset(
-                'assets/image_profile.png',
+              offset: Offset(
+                -SizeConfig.scaleWidth(20),
+                SizeConfig.scaleWidth(50),
+              ),
+              itemBuilder: (context) => [
+                const PopupMenuItem<SelectedMenu>(
+                  value: SelectedMenu.setting,
+                  child: Text('Setting'),
+                ),
+                const PopupMenuItem<SelectedMenu>(
+                  value: SelectedMenu.logout,
+                  child: Text('Log Out'),
+                ),
+              ],
+              child: Container(
+                width: SizeConfig.scaleWidth(58),
+                padding: EdgeInsets.all(SizeConfig.scaleWidth(4)),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: primaryColor,
+                  ),
+                ),
+                child: Image.asset(
+                  'assets/image_profile.png',
+                ),
               ),
             ),
           ],
