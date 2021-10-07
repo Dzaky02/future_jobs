@@ -3,13 +3,24 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 class CustomNavBar extends StatelessWidget {
   final int selectedIndex;
-  final List<Widget> items;
+  final List<String> icons;
+  final ValueChanged<int>? onTap;
+  final Color selectedItemColor;
+  final Color unSelectedItemColor;
 
-  const CustomNavBar({this.selectedIndex = 0, required this.items});
+  const CustomNavBar({
+    required this.icons,
+    this.onTap,
+    this.selectedIndex = 0,
+    this.selectedItemColor = const Color(0xff14145F),
+    this.unSelectedItemColor = const Color(0xff9191E3),
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: 59,
+      padding: const EdgeInsets.only(top: 5),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
@@ -22,19 +33,39 @@ class CustomNavBar extends StatelessWidget {
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [_buildItem(context)],
+        children: _generateItems(context),
       ),
     );
   }
 
-  Widget _buildItem(BuildContext context) {
+  List<Widget> _generateItems(BuildContext context) {
+    List<Widget> _items = [];
+
+    for (int i = 0; i < icons.length; i++) {
+      _items.add(
+        _buildItem(context, icons[i], i, () => onTap?.call(i)),
+      );
+    }
+
+    return _items;
+  }
+
+  Widget _buildItem(
+      BuildContext context, String icon, int index, VoidCallback onTap) {
     return AnimatedContainer(
-      duration: Duration(seconds: 2),
-      height: 40,
-      alignment: (selectedIndex == 0) ? Alignment.topCenter : Alignment.center,
-      child: SvgPicture.asset(
-        'assets/svg/icon_home.svg',
-        width: 24,
+      duration: Duration(milliseconds: 300),
+      height: 50,
+      alignment:
+          (selectedIndex == index) ? Alignment.topCenter : Alignment.center,
+      child: InkWell(
+        onTap: onTap,
+        child: SvgPicture.asset(
+          icon,
+          width: 24,
+          color: (selectedIndex == index)
+              ? selectedItemColor
+              : unSelectedItemColor,
+        ),
       ),
     );
   }

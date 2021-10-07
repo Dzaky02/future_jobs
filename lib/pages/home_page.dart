@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:future_jobs/models/category_model.dart';
 import 'package:future_jobs/models/job_model.dart';
 import 'package:future_jobs/providers/category_provider.dart';
@@ -9,6 +8,7 @@ import 'package:future_jobs/shared/sharedpref_keys.dart';
 import 'package:future_jobs/size_config.dart';
 import 'package:future_jobs/theme.dart';
 import 'package:future_jobs/widgets/category_card.dart';
+import 'package:future_jobs/widgets/custom_navbar.dart';
 import 'package:future_jobs/widgets/job_tile.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -27,6 +27,12 @@ class _HomePageState extends State<HomePage> {
 
   // Bottom Navigation Bar Value
   int _selectedIndex = 0;
+  List<String> icons = [
+    'assets/svg/icon_home.svg',
+    'assets/svg/icon_notification.svg',
+    'assets/svg/icon_love.svg',
+    'assets/svg/icon_user.svg',
+  ];
 
   Future<void> _logout() async {
     final SharedPreferences prefs = await _prefs;
@@ -75,9 +81,9 @@ class _HomePageState extends State<HomePage> {
                     fontSize: SizeConfig.scaleText(16),
                   ),
                 ),
-                (userProvider.user != null)
+                (userProvider.getUser() != null)
                     ? Text(
-                        userProvider.user.name,
+                        userProvider.getUser()!.name,
                         style: blackTextStyle.copyWith(
                           fontSize: SizeConfig.scaleText(24),
                           fontWeight: semiBold,
@@ -270,82 +276,10 @@ class _HomePageState extends State<HomePage> {
     }
 
     Widget bottomNavBar() {
-      return Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Color(0xffA1A1DE),
-              Color(0xffA1A1DE).withOpacity(0),
-            ],
-            begin: Alignment.bottomCenter,
-            end: Alignment.topCenter,
-          ),
-        ),
-        child: BottomNavigationBar(
-          elevation: 0,
-          backgroundColor: Color(0x00ffffff),
-          currentIndex: _selectedIndex,
-          type: BottomNavigationBarType.fixed,
-          selectedItemColor: Color(0xff14145F),
-          unselectedItemColor: Color(0xff9191E3),
-          showSelectedLabels: false,
-          showUnselectedLabels: false,
-          items: [
-            BottomNavigationBarItem(
-              label: 'Home',
-              icon: AnimatedContainer(
-                duration: Duration(seconds: 2),
-                height: 40,
-                alignment: (_selectedIndex == 0)
-                    ? Alignment.topCenter
-                    : Alignment.center,
-                child: SvgPicture.asset(
-                  'assets/svg/icon_home.svg',
-                  width: 24,
-                ),
-              ),
-            ),
-            BottomNavigationBarItem(
-              label: 'Notification',
-              icon: SvgPicture.asset(
-                'assets/svg/icon_notification.svg',
-                width: 24,
-                color: Color(0xff9191E3),
-              ),
-              activeIcon: SvgPicture.asset(
-                'assets/svg/icon_notification.svg',
-                width: 24,
-                color: Color(0xff14145F),
-              ),
-            ),
-            BottomNavigationBarItem(
-              label: 'Favorite',
-              icon: SvgPicture.asset(
-                'assets/svg/icon_love.svg',
-                width: 24,
-                color: Color(0xff9191E3),
-              ),
-              activeIcon: SvgPicture.asset(
-                'assets/svg/icon_love.svg',
-                width: 24,
-                color: Color(0xff14145F),
-              ),
-            ),
-            BottomNavigationBarItem(
-              label: 'Profile',
-              icon: SvgPicture.asset(
-                'assets/svg/icon_user.svg',
-                width: 24,
-                color: Color(0xff9191E3),
-              ),
-              activeIcon: SvgPicture.asset(
-                'assets/svg/icon_user.svg',
-                width: 24,
-                color: Color(0xff14145F),
-              ),
-            ),
-          ],
-        ),
+      return CustomNavBar(
+        icons: icons,
+        onTap: (value) => setState(() => _selectedIndex = value),
+        selectedIndex: _selectedIndex,
       );
     }
 
