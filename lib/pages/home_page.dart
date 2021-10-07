@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:future_jobs/models/category_model.dart';
 import 'package:future_jobs/models/job_model.dart';
 import 'package:future_jobs/providers/category_provider.dart';
@@ -22,7 +23,10 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   // Shared Preferences
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-  Future<String> _username;
+  late Future<String> _username;
+
+  // Bottom Navigation Bar Value
+  int _selectedIndex = 0;
 
   Future<void> _logout() async {
     final SharedPreferences prefs = await _prefs;
@@ -73,7 +77,7 @@ class _HomePageState extends State<HomePage> {
                 ),
                 (userProvider.user != null)
                     ? Text(
-                        userProvider.user?.name,
+                        userProvider.user.name,
                         style: blackTextStyle.copyWith(
                           fontSize: SizeConfig.scaleText(24),
                           fontWeight: semiBold,
@@ -103,7 +107,7 @@ class _HomePageState extends State<HomePage> {
                                 );
                               } else {
                                 return Text(
-                                  snapshot.data,
+                                  snapshot.data!,
                                   style: blackTextStyle.copyWith(
                                     fontSize: SizeConfig.scaleText(24),
                                     fontWeight: semiBold,
@@ -190,14 +194,15 @@ class _HomePageState extends State<HomePage> {
               future: categoryProvider.getCategories(),
               builder: (context, snapshot) {
                 // If future builder finish the prosess
-                if (snapshot.connectionState == ConnectionState.done) {
+                if (snapshot.connectionState == ConnectionState.done &&
+                    snapshot.hasData) {
                   int index = -1;
                   return ListView(
                     scrollDirection: Axis.horizontal,
                     physics: BouncingScrollPhysics(
                       parent: AlwaysScrollableScrollPhysics(),
                     ),
-                    children: snapshot.data.map((category) {
+                    children: snapshot.data!.map((category) {
                       index++;
                       return Container(
                         width: SizeConfig.scaleWidth(150),
@@ -245,11 +250,13 @@ class _HomePageState extends State<HomePage> {
             FutureBuilder<List<JobModel>>(
               future: jobProvider.getJobs(),
               builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.done) {
+                if (snapshot.connectionState == ConnectionState.done &&
+                    snapshot.hasData) {
                   return ListView(
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
-                    children: snapshot.data.map((job) => JobTile(job)).toList(),
+                    children:
+                        snapshot.data!.map((job) => JobTile(job)).toList(),
                   );
                 }
                 return Center(
@@ -263,38 +270,82 @@ class _HomePageState extends State<HomePage> {
     }
 
     Widget bottomNavBar() {
-      return BottomNavigationBar(
-        elevation: 0,
-        items: [
-          BottomNavigationBarItem(
-            icon: Image.asset(
-              'assets/icon_home.png',
-              width: 24,
-            ),
-            label: '',
+      return Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Color(0xffA1A1DE),
+              Color(0xffA1A1DE).withOpacity(0),
+            ],
+            begin: Alignment.bottomCenter,
+            end: Alignment.topCenter,
           ),
-          BottomNavigationBarItem(
-            icon: Image.asset(
-              'assets/icon_notification.png',
-              width: 24,
+        ),
+        child: BottomNavigationBar(
+          elevation: 0,
+          backgroundColor: Color(0x00ffffff),
+          currentIndex: _selectedIndex,
+          type: BottomNavigationBarType.fixed,
+          selectedItemColor: Color(0xff14145F),
+          unselectedItemColor: Color(0xff9191E3),
+          showSelectedLabels: false,
+          showUnselectedLabels: false,
+          items: [
+            BottomNavigationBarItem(
+              label: 'Home',
+              icon: AnimatedContainer(
+                duration: Duration(seconds: 2),
+                height: 40,
+                alignment: (_selectedIndex == 0)
+                    ? Alignment.topCenter
+                    : Alignment.center,
+                child: SvgPicture.asset(
+                  'assets/svg/icon_home.svg',
+                  width: 24,
+                ),
+              ),
             ),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Image.asset(
-              'assets/icon_love.png',
-              width: 24,
+            BottomNavigationBarItem(
+              label: 'Notification',
+              icon: SvgPicture.asset(
+                'assets/svg/icon_notification.svg',
+                width: 24,
+                color: Color(0xff9191E3),
+              ),
+              activeIcon: SvgPicture.asset(
+                'assets/svg/icon_notification.svg',
+                width: 24,
+                color: Color(0xff14145F),
+              ),
             ),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Image.asset(
-              'assets/icon_user.png',
-              width: 24,
+            BottomNavigationBarItem(
+              label: 'Favorite',
+              icon: SvgPicture.asset(
+                'assets/svg/icon_love.svg',
+                width: 24,
+                color: Color(0xff9191E3),
+              ),
+              activeIcon: SvgPicture.asset(
+                'assets/svg/icon_love.svg',
+                width: 24,
+                color: Color(0xff14145F),
+              ),
             ),
-            label: '',
-          ),
-        ],
+            BottomNavigationBarItem(
+              label: 'Profile',
+              icon: SvgPicture.asset(
+                'assets/svg/icon_user.svg',
+                width: 24,
+                color: Color(0xff9191E3),
+              ),
+              activeIcon: SvgPicture.asset(
+                'assets/svg/icon_user.svg',
+                width: 24,
+                color: Color(0xff14145F),
+              ),
+            ),
+          ],
+        ),
       );
     }
 
@@ -310,6 +361,7 @@ class _HomePageState extends State<HomePage> {
     }
 
     return Scaffold(
+      extendBody: true,
       bottomNavigationBar: bottomNavBar(),
       body: body(),
     );

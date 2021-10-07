@@ -1,28 +1,28 @@
 class JobModel {
-  String id;
-  String name;
-  String category;
-  String companyName;
-  String companyLogo;
-  String location;
-  List about;
-  List qualifications;
-  List responsibilities;
-  int createdAt;
-  int updatedAt;
+  late String id;
+  late String name;
+  late String category;
+  late String companyName;
+  late String companyLogo;
+  late String location;
+  late List about;
+  late List qualifications;
+  late List responsibilities;
+  late int createdAt;
+  late int updatedAt;
 
   JobModel({
-    this.id,
-    this.name,
-    this.category,
-    this.companyName,
-    this.companyLogo,
-    this.location,
-    this.about,
-    this.qualifications,
-    this.responsibilities,
-    this.createdAt,
-    this.updatedAt,
+    required this.id,
+    required this.name,
+    required this.category,
+    required this.companyName,
+    required this.companyLogo,
+    required this.location,
+    required this.about,
+    required this.qualifications,
+    required this.responsibilities,
+    required this.createdAt,
+    required this.updatedAt,
   });
 
   JobModel.fromJson(Map<String, dynamic> json) {

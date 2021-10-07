@@ -76,7 +76,7 @@ class _SignUpPageState extends State<SignUpPage> {
           isLoading = true;
         });
 
-        UserModel user = await authProvider.register(
+        UserModel? user = await authProvider.register(
           emailController.text,
           passwordController.text,
           nameController.text,

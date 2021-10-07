@@ -106,9 +106,11 @@ class CategoryPage extends StatelessWidget {
             FutureBuilder<List<JobModel>>(
               future: jobProvider.getJobsByCategory(category.name),
               builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.done) {
+                if (snapshot.connectionState == ConnectionState.done &&
+                    snapshot.hasData) {
                   return Column(
-                    children: snapshot.data.map((job) => JobTile(job)).toList(),
+                    children:
+                        snapshot.data!.map((job) => JobTile(job)).toList(),
                   );
                 }
 
@@ -145,9 +147,11 @@ class CategoryPage extends StatelessWidget {
             FutureBuilder<List<JobModel>>(
               future: jobProvider.getJobs(),
               builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.done) {
+                if (snapshot.connectionState == ConnectionState.done &&
+                    snapshot.hasData) {
                   return Column(
-                    children: snapshot.data.map((job) => JobTile(job)).toList(),
+                    children:
+                        snapshot.data!.map((job) => JobTile(job)).toList(),
                   );
                 }
 

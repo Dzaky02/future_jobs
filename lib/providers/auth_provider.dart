@@ -7,7 +7,7 @@ import 'package:future_jobs/models/user_model.dart';
 import 'package:http/http.dart' as http;
 
 class AuthProvider with ChangeNotifier {
-  Future<UserModel> register(
+  Future<UserModel?> register(
       String email, String password, String name, String goal) async {
     try {
       var body = {
@@ -36,7 +36,7 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
-  Future<UserModel> login(String email, String password) async {
+  Future<UserModel?> login(String email, String password) async {
     try {
       var body = {
         'email': email,

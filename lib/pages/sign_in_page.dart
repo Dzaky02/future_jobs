@@ -180,7 +180,7 @@ class _SignInPageState extends State<SignInPage> {
                     print(
                         emailController.text + '\n' + passwordController.text);
 
-                    UserModel user = await authProvider.login(
+                    UserModel? user = await authProvider.login(
                       emailController.text,
                       passwordController.text,
                     );

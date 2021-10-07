@@ -13,7 +13,7 @@ class SplashPage extends StatefulWidget {
 
 class _SplashPageState extends State<SplashPage> {
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-  Future<bool> _isLogin;
+  late Future<bool> _isLogin;
 
   @override
   void initState() {
@@ -65,7 +65,8 @@ class _SplashPageState extends State<SplashPage> {
               _navigatePage(context, '/onboarding');
               return _buildImage();
             } else {
-              _navigatePage(context, (snapshot.data) ? '/home' : '/onboarding');
+              _navigatePage(
+                  context, (snapshot.data ?? false) ? '/home' : '/onboarding');
               return _buildImage();
             }
         }
