@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:future_jobs/shared/sharedpref_keys.dart';
 import 'package:future_jobs/size_config.dart';
 import 'package:future_jobs/theme.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashPage extends StatefulWidget {
@@ -30,30 +29,25 @@ class _SplashPageState extends State<SplashPage> {
     SizeConfig().init(context);
     return Scaffold(
       backgroundColor: primaryColor,
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(
-              'assets/logo.png',
-              width: SizeConfig.scaleWidth(59),
-              height: SizeConfig.scaleHeight(76),
-            ),
-            SizedBox(
-              height: SizeConfig.scaleHeight(50),
-            ),
-            Text(
-              'FUTUREJOB',
-              style: GoogleFonts.poppins(
-                color: Colors.white,
-                fontSize: SizeConfig.scaleText(32),
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            _buildFutureBuilder(),
-          ],
-        ),
+      body: Stack(
+        alignment: Alignment.center,
+        children: [
+          Center(
+            child: _buildImage(),
+          ),
+          Center(
+            child: _buildFutureBuilder(),
+          ),
+        ],
       ),
+    );
+  }
+
+  Image _buildImage() {
+    return Image.asset(
+      'assets/image_splash.png',
+      width: 182,
+      height: 174,
     );
   }
 
@@ -64,15 +58,15 @@ class _SplashPageState extends State<SplashPage> {
         print('IS LOGIN? ${snapshot.data}');
         switch (snapshot.connectionState) {
           case ConnectionState.waiting:
-            return _buildLinearProgressIndicator();
+            return _buildImage();
           default:
             if (snapshot.hasError) {
               _buildShowSnackBar(snapshot.error.toString());
-              _NavigatePage(context, '/onboarding');
-              return _buildLinearProgressIndicator();
+              _navigatePage(context, '/onboarding');
+              return _buildImage();
             } else {
-              _NavigatePage(context, (snapshot.data) ? '/home' : '/onboarding');
-              return _buildLinearProgressIndicator();
+              _navigatePage(context, (snapshot.data) ? '/home' : '/onboarding');
+              return _buildImage();
             }
         }
       },
@@ -97,9 +91,9 @@ class _SplashPageState extends State<SplashPage> {
     );
   }
 
-  Timer _NavigatePage(BuildContext context, String routeName) {
+  Timer _navigatePage(BuildContext context, String routeName) {
     return Timer(
-      Duration(seconds: 2),
+      Duration(milliseconds: 500),
       () {
         Navigator.pushNamedAndRemoveUntil(
           context,
@@ -107,19 +101,6 @@ class _SplashPageState extends State<SplashPage> {
           (route) => false,
         );
       },
-    );
-  }
-
-  Container _buildLinearProgressIndicator() {
-    return Container(
-      width: SizeConfig.scaleWidth(180),
-      height: SizeConfig.scaleWidth(4),
-      margin: EdgeInsets.only(top: SizeConfig.scaleHeight(16)),
-      decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
-      child: LinearProgressIndicator(
-        backgroundColor: blackColor,
-        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-      ),
     );
   }
 }
