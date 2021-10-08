@@ -1,18 +1,18 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:future_jobs/pages/home_page.dart';
-import 'package:future_jobs/pages/onboarding_page.dart';
-import 'package:future_jobs/pages/sign_in_page.dart';
-import 'package:future_jobs/pages/sign_up_page.dart';
-import 'package:future_jobs/pages/splash_page.dart';
-import 'package:future_jobs/providers/auth_provider.dart';
-import 'package:future_jobs/providers/category_provider.dart';
-import 'package:future_jobs/providers/job_provider.dart';
-import 'package:future_jobs/providers/user_provider.dart';
-import 'package:future_jobs/shared/shared_value.dart';
-import 'package:future_jobs/shared/theme.dart';
 import 'package:provider/provider.dart';
+
+import './pages/home_page.dart';
+import './pages/onboarding_page.dart';
+import './pages/sign_in_page.dart';
+import './pages/sign_up_page.dart';
+import './pages/splash_page.dart';
+import './providers/auth_provider.dart';
+import './providers/category_provider.dart';
+import './providers/job_provider.dart';
+import './providers/user_provider.dart';
+import './shared/shared_value.dart';
+import './shared/theme.dart';
 
 void main() => runApp(MyApp());
 
@@ -113,29 +113,31 @@ class MyApp extends StatelessWidget {
             ),
           ),
           inputDecorationTheme: InputDecorationTheme(
-            filled: true,
-            fillColor: surfaceColor,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(300),
-              borderSide: BorderSide.none,
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(300),
-              borderSide: BorderSide.none,
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(300),
-              borderSide: BorderSide(color: primaryColor),
-            ),
-            errorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(300),
-              borderSide: BorderSide(color: errorColor),
-            ),
-            focusedErrorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(300),
-              borderSide: BorderSide(color: errorColor),
-            ),
-          ),
+              filled: true,
+              fillColor: surfaceColor,
+              contentPadding:
+                  const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(300),
+                borderSide: BorderSide.none,
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(300),
+                borderSide: BorderSide.none,
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(300),
+                borderSide: BorderSide(color: primaryColor),
+              ),
+              errorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(300),
+                borderSide: BorderSide(color: errorColor),
+              ),
+              focusedErrorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(300),
+                borderSide: BorderSide(color: errorColor),
+              ),
+              errorStyle: TextStyle(height: 0, fontSize: 1)),
           textTheme: TextTheme(
             headline4: TextStyle(
               fontSize: 30,
@@ -144,13 +146,16 @@ class MyApp extends StatelessWidget {
               color: Colors.white,
             ),
             headline5: TextStyle(
+              height: 1.6,
               fontSize: 24,
               letterSpacing: 0,
+              color: blackColor,
               fontWeight: FontWeight.w600,
             ),
             headline6: TextStyle(
               fontSize: 20,
               letterSpacing: 0,
+              color: blackColor,
               fontWeight: FontWeight.w600,
             ),
             subtitle1: TextStyle(
@@ -171,6 +176,7 @@ class MyApp extends StatelessWidget {
             bodyText2: TextStyle(
               fontSize: 14,
               letterSpacing: 0,
+              color: hintColor,
               fontWeight: FontWeight.normal,
             ),
             caption: TextStyle(

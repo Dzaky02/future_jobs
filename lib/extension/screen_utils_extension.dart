@@ -51,4 +51,6 @@ extension ScreenUtil on BuildContext {
   OutlinedButtonThemeData get outlinedButton =>
       Theme.of(this).outlinedButtonTheme;
   TextButtonThemeData get textButton => Theme.of(this).textButtonTheme;
+  InputDecorationTheme get inputDecoration =>
+      Theme.of(this).inputDecorationTheme;
 }

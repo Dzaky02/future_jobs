@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import './shared_method.dart';
+import '../extension/screen_utils_extension.dart';
 import '../size_config.dart';
 
 // Note: Constant Values
@@ -51,34 +52,16 @@ FontWeight semiBold = FontWeight.w700;
 FontWeight bold = FontWeight.bold;
 
 // Decoration
-InputDecoration kInputDecorTheme() {
+InputDecoration kInputDecorTheme(BuildContext context, bool validator,
+    [Widget? suffixIcon]) {
   return InputDecoration(
-    contentPadding: EdgeInsets.symmetric(
-      vertical: SizeConfig.scaleWidth(10),
-      horizontal: SizeConfig.scaleWidth(20),
-    ),
-    fillColor: Color(0xffF1F0F5),
-    filled: true,
-    enabledBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(SizeConfig.scaleWidth(100)),
-      borderSide: BorderSide.none,
-    ),
+    focusColor: validator ? context.primaryColor : context.errorColor,
     focusedBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(SizeConfig.scaleWidth(100)),
+      borderRadius: BorderRadius.circular(300),
       borderSide: BorderSide(
-        color: primaryColor,
-      ),
+          color: validator ? context.primaryColor : context.errorColor),
     ),
-    errorBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(SizeConfig.scaleWidth(100)),
-      borderSide: BorderSide(
-        color: redColor,
-      ),
-    ),
-    border: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(SizeConfig.scaleWidth(100)),
-    ),
-    hintText: '',
+    suffixIcon: suffixIcon,
   );
 }
 

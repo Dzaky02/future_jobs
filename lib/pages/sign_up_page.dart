@@ -1,13 +1,15 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
-import 'package:future_jobs/models/user_model.dart';
-import 'package:future_jobs/providers/auth_provider.dart';
-import 'package:future_jobs/providers/user_provider.dart';
-import 'package:future_jobs/shared/sharedpref_keys.dart';
-import 'package:future_jobs/shared/theme.dart';
-import 'package:future_jobs/size_config.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../extension/screen_utils_extension.dart';
+import '../models/user_model.dart';
+import '../providers/auth_provider.dart';
+import '../providers/user_provider.dart';
+import '../shared/sharedpref_keys.dart';
+import '../shared/theme.dart';
+import '../size_config.dart';
 
 class SignUpPage extends StatefulWidget {
   @override
@@ -15,16 +17,43 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
+  var _isInit = true;
+
   // Shared Preference
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
-  // Controller
-  TextEditingController nameController = TextEditingController(text: '');
-  TextEditingController emailController = TextEditingController(text: '');
-  TextEditingController passwordController = TextEditingController(text: '');
-  TextEditingController goalController = TextEditingController(text: '');
+  // Providers
+  late AuthProvider authProvider;
+  late UserProvider userProvider;
 
-  bool isLoading = false;
+  // Controller
+  final GlobalKey<FormState> _formKey = GlobalKey();
+  TextEditingController _nameController = TextEditingController(text: '');
+  TextEditingController _emailController = TextEditingController(text: '');
+  TextEditingController _passwordController = TextEditingController(text: '');
+  TextEditingController _goalController = TextEditingController(text: '');
+
+  // Field
+  String? _nameField;
+  String? _emailField;
+  String? _passwordField;
+  String? _goalField;
+
+  // Focus Node
+  late FocusNode _nameFN;
+  late FocusNode _emailFN;
+  late FocusNode _passwordFN;
+  late FocusNode _goalFN;
+
+  // Form validation status
+  bool _isNameValid = true;
+  bool _isEmailValid = false;
+  bool _isPasswordValid = true;
+  bool _isGoalValid = true;
+  bool _showPassword = false;
+
+  // Upload loading
+  bool _isLoading = false;
 
   Future<void> _setLoginState(UserModel user) async {
     final SharedPreferences prefs = await _prefs;
@@ -33,9 +62,7 @@ class _SignUpPageState extends State<SignUpPage> {
       (bool success) {
         prefs.setBool(SharedPrefConfig.IS_LOGIN, true).then(
           (bool success) {
-            setState(() {
-              isLoading = false;
-            });
+            setState(() => _isLoading = false);
             Navigator.pushNamedAndRemoveUntil(
                 context, '/home', (route) => false);
             return true;
@@ -46,54 +73,36 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   @override
+  void initState() {
+    _nameFN = FocusNode();
+    _emailFN = FocusNode();
+    _passwordFN = FocusNode();
+    _goalFN = FocusNode();
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    if (_isInit) {
+      authProvider = Provider.of<AuthProvider>(context);
+      userProvider = Provider.of<UserProvider>(context);
+    }
+    _isInit = false;
+    super.didChangeDependencies();
+  }
+
+  @override
+  void dispose() {
+    _nameFN.dispose();
+    _emailFN.dispose();
+    _passwordFN.dispose();
+    _goalFN.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    var authProvider = Provider.of<AuthProvider>(context);
-    var userProvider = Provider.of<UserProvider>(context);
-
-    void showError(String message) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          backgroundColor: Colors.red,
-          content: Text(
-            message,
-            style: whiteTextStyle.copyWith(
-              fontSize: SizeConfig.scaleText(16),
-            ),
-          ),
-        ),
-      );
-    }
-
-    void submitSignUp() async {
-      if (nameController.text.isEmpty ||
-          emailController.text.isEmpty ||
-          passwordController.text.isEmpty ||
-          goalController.text.isEmpty) {
-        showError('Semua field harus diisi');
-      } else {
-        setState(() {
-          isLoading = true;
-        });
-
-        UserModel? user = await authProvider.register(
-          emailController.text,
-          passwordController.text,
-          nameController.text,
-          goalController.text,
-        );
-
-        if (user == null) {
-          setState(() {
-            isLoading = false;
-          });
-          showError('email sudah terdaftar');
-        } else {
-          userProvider.user = user;
-          _setLoginState(user);
-        }
-      }
-    }
 
     Widget header() {
       return Column(
@@ -101,23 +110,15 @@ class _SignUpPageState extends State<SignUpPage> {
         children: [
           Text(
             'Sign Up',
-            style: greyTextStyle.copyWith(
-              fontSize: SizeConfig.scaleText(16),
-            ),
-          ),
-          SizedBox(
-            height: SizeConfig.scaleHeight(2),
+            textScaleFactor: context.ts,
+            style: context.text.subtitle1?.copyWith(color: context.onSecondary),
           ),
           Text(
             'Begin New Journey',
-            style: blackTextStyle.copyWith(
-              fontSize: SizeConfig.scaleText(24),
-              fontWeight: semiBold,
-            ),
+            textScaleFactor: context.ts,
+            style: context.text.headline5,
           ),
-          SizedBox(
-            height: SizeConfig.scaleHeight(30),
-          ),
+          SizedBox(height: context.h(30)),
         ],
       );
     }
@@ -125,18 +126,14 @@ class _SignUpPageState extends State<SignUpPage> {
     Widget inputImage() {
       return Center(
         child: Container(
-          width: SizeConfig.scaleText(120),
-          height: SizeConfig.scaleText(120),
+          width: context.dp(110),
+          height: context.dp(110),
           padding: EdgeInsets.all(SizeConfig.scaleWidth(8)),
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            border: Border.all(
-              color: primaryColor,
-            ),
+            border: Border.all(color: context.primaryVariant),
           ),
-          child: Image.asset(
-            'assets/image_profile.png',
-          ),
+          child: Image.asset('assets/image_profile.png'),
         ),
       );
     }
@@ -145,29 +142,27 @@ class _SignUpPageState extends State<SignUpPage> {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(
-            height: SizeConfig.scaleHeight(20),
-          ),
+          SizedBox(height: context.h(30)),
           Text(
             'Full Name',
-            style: greyTextStyle.copyWith(
-              fontSize: SizeConfig.scaleText(16),
-            ),
+            style: context.text.subtitle1?.copyWith(color: context.onSecondary),
           ),
-          SizedBox(
-            height: SizeConfig.scaleHeight(8),
-          ),
+          SizedBox(height: context.dp(8)),
           TextFormField(
-            controller: nameController,
-            cursorColor: primaryColor,
-            onChanged: (value) {
-              setState(() {});
-            },
-            style: purpleTextStyle.copyWith(
-              fontSize: SizeConfig.scaleText(16),
-            ),
+            focusNode: _nameFN,
+            controller: _nameController,
+            cursorColor:
+                _isNameValid ? context.primaryColor : context.errorColor,
+            maxLines: 1,
             textInputAction: TextInputAction.next,
-            decoration: kInputDecorTheme(),
+            style: context.text.subtitle1?.copyWith(
+                color:
+                    _isNameValid ? context.primaryColor : context.errorColor),
+            onChanged: (value) => (!_isNameValid)
+                ? setState(() => _isNameValid = value.length > 3)
+                : null,
+            validator: (value) =>
+                (value != null && value.length > 6) ? null : '',
           ),
         ],
       );
@@ -177,30 +172,26 @@ class _SignUpPageState extends State<SignUpPage> {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(
-            height: SizeConfig.scaleHeight(20),
-          ),
+          SizedBox(height: context.dp(16)),
           Text(
             'Email Address',
-            style: greyTextStyle.copyWith(
-              fontSize: SizeConfig.scaleText(16),
-            ),
+            style: context.text.subtitle1?.copyWith(color: context.onSecondary),
           ),
           SizedBox(
             height: SizeConfig.scaleHeight(8),
           ),
           TextFormField(
-            controller: emailController,
-            cursorColor: primaryColor,
-            onChanged: (value) {
-              setState(() {});
-            },
+            controller: _emailController,
+            cursorColor:
+                _isEmailValid ? context.primaryColor : context.errorColor,
+            onChanged: (value) => setState(() =>
+                _isEmailValid = EmailValidator.validate(_emailController.text)),
             keyboardType: TextInputType.emailAddress,
             textInputAction: TextInputAction.next,
-            decoration: kInputDecorTheme(),
-            style: EmailValidator.validate(emailController.text)
-                ? purpleTextStyle.copyWith(fontSize: SizeConfig.scaleText(16))
-                : redTextStyle.copyWith(fontSize: SizeConfig.scaleText(16)),
+            decoration: kInputDecorTheme(context, _isEmailValid),
+            style: context.text.subtitle1?.copyWith(
+                color:
+                    _isEmailValid ? context.primaryColor : context.errorColor),
           ),
         ],
       );
@@ -215,25 +206,32 @@ class _SignUpPageState extends State<SignUpPage> {
           ),
           Text(
             'Password',
-            style: greyTextStyle.copyWith(
-              fontSize: SizeConfig.scaleText(16),
-            ),
+            style: context.text.subtitle1?.copyWith(color: context.onSecondary),
           ),
           SizedBox(
             height: SizeConfig.scaleHeight(8),
           ),
           TextFormField(
-            controller: passwordController,
-            cursorColor: primaryColor,
-            obscureText: true,
+            controller: _passwordController,
+            cursorColor:
+                _isPasswordValid ? context.primaryColor : context.errorColor,
+            obscureText: !_showPassword,
             onChanged: (value) {
               setState(() {});
             },
             textInputAction: TextInputAction.next,
-            decoration: kInputDecorTheme(),
-            style: purpleTextStyle.copyWith(
-              fontSize: SizeConfig.scaleText(16),
+            decoration: kInputDecorTheme(
+              context,
+              _isPasswordValid,
+              IconButton(
+                onPressed: () => setState(() => _showPassword = !_showPassword),
+                icon: Icon(Icons.remove_red_eye, color: context.onSurface),
+              ),
             ),
+            style: context.text.subtitle1?.copyWith(
+                color: _isPasswordValid
+                    ? context.primaryColor
+                    : context.errorColor),
           ),
         ],
       );
@@ -248,25 +246,24 @@ class _SignUpPageState extends State<SignUpPage> {
           ),
           Text(
             'Your Goal',
-            style: greyTextStyle.copyWith(
-              fontSize: SizeConfig.scaleText(16),
-            ),
+            style: context.text.subtitle1?.copyWith(color: context.onSecondary),
           ),
           SizedBox(
             height: SizeConfig.scaleHeight(8),
           ),
           TextFormField(
-            controller: goalController,
-            cursorColor: primaryColor,
+            cursorColor:
+                _isGoalValid ? context.primaryColor : context.errorColor,
+            controller: _goalController,
             onChanged: (value) {
               setState(() {});
             },
             onFieldSubmitted: (_) => submitSignUp,
             textInputAction: TextInputAction.done,
-            decoration: kInputDecorTheme(),
-            style: purpleTextStyle.copyWith(
-              fontSize: SizeConfig.scaleText(16),
-            ),
+            style: context.text.subtitle1?.copyWith(
+                color: _isPasswordValid
+                    ? context.primaryColor
+                    : context.errorColor),
           ),
           SizedBox(
             height: SizeConfig.scaleHeight(40),
@@ -278,7 +275,7 @@ class _SignUpPageState extends State<SignUpPage> {
     Widget signUpButton() {
       return Container(
         width: double.infinity,
-        child: isLoading
+        child: _isLoading
             ? Center(
                 child: CircularProgressIndicator(),
               )
@@ -317,22 +314,88 @@ class _SignUpPageState extends State<SignUpPage> {
 
     return Scaffold(
       body: SafeArea(
-        child: ListView(
-          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-          padding: EdgeInsets.symmetric(
-            vertical: SizeConfig.scaleHeight(30),
-            horizontal: SizeConfig.scaleWidth(defaultMargin),
+        child: Form(
+          key: _formKey,
+          child: ListView(
+            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+            padding: EdgeInsets.symmetric(
+              vertical: SizeConfig.scaleHeight(30),
+              horizontal: SizeConfig.scaleWidth(defaultMargin),
+            ),
+            children: [
+              header(),
+              inputImage(),
+              inputName(),
+              inputEmail(),
+              inputPassword(),
+              inputGoal(),
+              signUpButton(),
+              signInButton(),
+            ],
           ),
-          children: [
-            header(),
-            inputImage(),
-            inputName(),
-            inputEmail(),
-            inputPassword(),
-            inputGoal(),
-            signUpButton(),
-            signInButton(),
-          ],
+        ),
+      ),
+    );
+  }
+
+  void submitSignUp() async {
+    if (!_formKey.currentState!.validate()) {
+      // Invalid!
+      if (_nameController.text.isEmpty ||
+          _emailController.text.isEmpty ||
+          _passwordController.text.isEmpty ||
+          _goalController.text.isEmpty) {
+        if (_nameController.text.isEmpty) {
+          _isNameValid = false;
+          _nameFN.requestFocus();
+        } else if (_emailController.text.isEmpty) {
+          _isEmailValid = false;
+          _emailFN.requestFocus();
+        } else if (_passwordController.text.isEmpty) {
+          _isPasswordValid = false;
+          _passwordFN.requestFocus();
+        } else if (_goalController.text.isEmpty) {
+          _isGoalValid = false;
+          _goalFN.requestFocus();
+        }
+        showError('Please fill out all field');
+      } else if (!_isEmailValid) {
+        _emailFN.requestFocus();
+        showError('Email format is not valid');
+      } else if (_passwordController.text.length < 6) {
+        _isPasswordValid = false;
+        _passwordFN.requestFocus();
+        showError('Password required a min. of 6 characters');
+      }
+      return;
+    }
+    _formKey.currentState!.save();
+
+    setState(() => _isLoading = true);
+
+    UserModel? user = await authProvider.register(
+      _emailField!,
+      _passwordField!,
+      _nameField!,
+      _goalField!,
+    );
+
+    if (user == null) {
+      setState(() => _isLoading = false);
+      showError('Oops! seem\'s you already sign-up before');
+    } else {
+      userProvider.user = user;
+      _setLoginState(user);
+    }
+  }
+
+  void showError(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        backgroundColor: context.errorColor,
+        content: Text(
+          message,
+          style: context.text.subtitle1?.copyWith(color: context.onError),
         ),
       ),
     );

@@ -1,13 +1,14 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
-import 'package:future_jobs/models/user_model.dart';
-import 'package:future_jobs/providers/auth_provider.dart';
-import 'package:future_jobs/providers/user_provider.dart';
-import 'package:future_jobs/shared/sharedpref_keys.dart';
-import 'package:future_jobs/shared/theme.dart';
-import 'package:future_jobs/size_config.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../models/user_model.dart';
+import '../providers/auth_provider.dart';
+import '../providers/user_provider.dart';
+import '../shared/sharedpref_keys.dart';
+import '../shared/theme.dart';
+import '../size_config.dart';
 
 class SignInPage extends StatefulWidget {
   @override
@@ -121,7 +122,6 @@ class _SignInPageState extends State<SignInPage> {
                 : redTextStyle.copyWith(fontSize: SizeConfig.scaleText(16)),
             keyboardType: TextInputType.emailAddress,
             textInputAction: TextInputAction.next,
-            decoration: kInputDecorTheme(),
           ),
         ],
       );
@@ -151,7 +151,6 @@ class _SignInPageState extends State<SignInPage> {
               fontSize: SizeConfig.scaleText(16),
             ),
             textInputAction: TextInputAction.done,
-            decoration: kInputDecorTheme(),
           ),
           SizedBox(
             height: SizeConfig.scaleHeight(40),
