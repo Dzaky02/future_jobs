@@ -12,7 +12,6 @@ import 'package:future_jobs/providers/job_provider.dart';
 import 'package:future_jobs/providers/user_provider.dart';
 import 'package:future_jobs/shared/shared_value.dart';
 import 'package:future_jobs/shared/theme.dart';
-import 'package:future_jobs/widgets/FadePageTransitionsBuilder.dart';
 import 'package:provider/provider.dart';
 
 void main() => runApp(MyApp());
@@ -66,8 +65,8 @@ class MyApp extends StatelessWidget {
             onError: Colors.white,
           ),
           pageTransitionsTheme: PageTransitionsTheme(builders: {
-            TargetPlatform.iOS: FadePageTransitionsBuilder(),
-            TargetPlatform.android: FadePageTransitionsBuilder(),
+            TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+            TargetPlatform.android: CupertinoPageTransitionsBuilder(),
           }),
           outlinedButtonTheme: OutlinedButtonThemeData(
             style: OutlinedButton.styleFrom(
@@ -77,21 +76,25 @@ class MyApp extends StatelessWidget {
               fixedSize: Size(200, 45),
               alignment: Alignment.center,
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(double.infinity)),
+                borderRadius: BorderRadius.circular(300),
+              ),
               textStyle: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
+              ),
+            ).copyWith(
+              side: MaterialStateProperty.resolveWith<BorderSide>(
+                (Set<MaterialState> states) => BorderSide(color: Colors.white),
               ),
             ),
           ),
           elevatedButtonTheme: ElevatedButtonThemeData(
             style: ElevatedButton.styleFrom(
               primary: primaryColor,
-              onSurface: Colors.white,
               fixedSize: Size(200, 45),
               alignment: Alignment.center,
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(double.infinity)),
+                  borderRadius: BorderRadius.circular(300)),
               textStyle: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
@@ -113,29 +116,29 @@ class MyApp extends StatelessWidget {
             filled: true,
             fillColor: surfaceColor,
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(double.infinity),
+              borderRadius: BorderRadius.circular(300),
               borderSide: BorderSide.none,
             ),
             enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(double.infinity),
+              borderRadius: BorderRadius.circular(300),
               borderSide: BorderSide.none,
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(double.infinity),
+              borderRadius: BorderRadius.circular(300),
               borderSide: BorderSide(color: primaryColor),
             ),
             errorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(double.infinity),
+              borderRadius: BorderRadius.circular(300),
               borderSide: BorderSide(color: errorColor),
             ),
             focusedErrorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(double.infinity),
+              borderRadius: BorderRadius.circular(300),
               borderSide: BorderSide(color: errorColor),
             ),
           ),
           textTheme: TextTheme(
             headline4: TextStyle(
-              fontSize: 32,
+              fontSize: 30,
               letterSpacing: 0,
               fontWeight: FontWeight.normal,
               color: Colors.white,
