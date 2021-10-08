@@ -4,7 +4,7 @@ import 'package:future_jobs/models/category_model.dart';
 import 'package:future_jobs/pages/category_page.dart';
 import 'package:future_jobs/size_config.dart';
 
-import '../theme.dart';
+import '../shared/theme.dart';
 
 class CategoryCard extends StatelessWidget {
   final CategoryModel category;

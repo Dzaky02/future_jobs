@@ -4,8 +4,8 @@ import 'package:future_jobs/models/user_model.dart';
 import 'package:future_jobs/providers/auth_provider.dart';
 import 'package:future_jobs/providers/user_provider.dart';
 import 'package:future_jobs/shared/sharedpref_keys.dart';
+import 'package:future_jobs/shared/theme.dart';
 import 'package:future_jobs/size_config.dart';
-import 'package:future_jobs/theme.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

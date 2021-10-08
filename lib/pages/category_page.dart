@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:future_jobs/models/category_model.dart';
 import 'package:future_jobs/models/job_model.dart';
 import 'package:future_jobs/providers/job_provider.dart';
+import 'package:future_jobs/shared/theme.dart';
 import 'package:future_jobs/size_config.dart';
-import 'package:future_jobs/theme.dart';
 import 'package:future_jobs/widgets/job_tile.dart';
 import 'package:provider/provider.dart';
 

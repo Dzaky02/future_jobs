@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:future_jobs/models/job_model.dart';
 import 'package:future_jobs/size_config.dart';
 
-import '../theme.dart';
+import '../shared/theme.dart';
 
 class DetailPage extends StatefulWidget {
   final JobModel job;

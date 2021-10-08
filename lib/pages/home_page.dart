@@ -4,9 +4,10 @@ import 'package:future_jobs/models/job_model.dart';
 import 'package:future_jobs/providers/category_provider.dart';
 import 'package:future_jobs/providers/job_provider.dart';
 import 'package:future_jobs/providers/user_provider.dart';
+import 'package:future_jobs/shared/shared_value.dart';
 import 'package:future_jobs/shared/sharedpref_keys.dart';
+import 'package:future_jobs/shared/theme.dart';
 import 'package:future_jobs/size_config.dart';
-import 'package:future_jobs/theme.dart';
 import 'package:future_jobs/widgets/category_card.dart';
 import 'package:future_jobs/widgets/custom_navbar.dart';
 import 'package:future_jobs/widgets/job_tile.dart';
@@ -40,7 +41,7 @@ class _HomePageState extends State<HomePage> {
     prefs.setBool(SharedPrefConfig.IS_LOGIN, false).then(
       (bool success) {
         Navigator.pushNamedAndRemoveUntil(
-            context, '/onboarding', (route) => false);
+            context, RouteName.onBoarding, (route) => false);
         return false;
       },
     );

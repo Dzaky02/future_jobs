@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:future_jobs/shared/theme.dart';
 import 'package:future_jobs/size_config.dart';
-import 'package:future_jobs/theme.dart';
 
 class OnBoardingPage extends StatelessWidget {
   @override

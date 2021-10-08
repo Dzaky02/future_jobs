@@ -1,9 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:future_jobs/shared/shared_value.dart';
 import 'package:future_jobs/shared/sharedpref_keys.dart';
+import 'package:future_jobs/shared/theme.dart';
 import 'package:future_jobs/size_config.dart';
-import 'package:future_jobs/theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashPage extends StatefulWidget {
@@ -62,11 +63,14 @@ class _SplashPageState extends State<SplashPage> {
           default:
             if (snapshot.hasError) {
               _buildShowSnackBar(snapshot.error.toString());
-              _navigatePage(context, '/onboarding');
+              _navigatePage(context, RouteName.onBoarding);
               return _buildImage();
             } else {
               _navigatePage(
-                  context, (snapshot.data ?? false) ? '/home' : '/onboarding');
+                  context,
+                  (snapshot.data ?? false)
+                      ? RouteName.home
+                      : RouteName.onBoarding);
               return _buildImage();
             }
         }
