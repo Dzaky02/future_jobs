@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         routes: {
           '/': (context) => SplashPage(),
-          '/onboarding': (context) => OnboardingPage(),
+          '/onboarding': (context) => OnBoardingPage(),
           '/sign-in': (context) => SignInPage(),
           '/sign-up': (context) => SignUpPage(),
           '/home': (context) => HomePage(),

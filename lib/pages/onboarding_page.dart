@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:future_jobs/size_config.dart';
 import 'package:future_jobs/theme.dart';
 
-class OnboardingPage extends StatelessWidget {
+class OnBoardingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
