@@ -1,9 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:future_jobs/models/category_model.dart';
-import 'package:future_jobs/pages/category_page.dart';
-import 'package:future_jobs/size_config.dart';
 
+import '../extension/screen_utils_extension.dart';
+import '../models/category_model.dart';
+import '../pages/category_page.dart';
 import '../shared/theme.dart';
 
 class CategoryCard extends StatelessWidget {
@@ -23,36 +22,24 @@ class CategoryCard extends StatelessWidget {
         );
       },
       child: Container(
-        width: SizeConfig.scaleWidth(150),
-        height: SizeConfig.scaleHeight(200),
-        margin: EdgeInsets.only(
-          right: SizeConfig.scaleWidth(16),
-        ),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(
-            SizeConfig.scaleWidth(16),
-          ),
-        ),
+        width: context.dp(133),
+        height: context.dp(180),
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(16)),
         child: Stack(
           children: [
             ClipRRect(
-              borderRadius: BorderRadius.circular(
-                SizeConfig.scaleWidth(16),
-              ),
+              borderRadius: BorderRadius.circular(16),
               child: Image.network(
                 category.imageUrl,
                 fit: BoxFit.cover,
-                width: SizeConfig.scaleWidth(150),
-                height: SizeConfig.scaleHeight(200),
+                width: context.dp(133),
+                height: context.dp(180),
                 loadingBuilder: (context, child, loadingProgress) {
                   if (loadingProgress == null) return child;
                   return Container(
-                    width: SizeConfig.scaleWidth(150),
-                    height: SizeConfig.scaleHeight(200),
-                    padding: EdgeInsets.all(
-                      SizeConfig.scaleWidth(12),
-                    ),
-                    color: Colors.black12,
+                    width: context.dp(133),
+                    height: context.dp(180),
+                    color: context.surface,
                     child: Center(
                       child: CircularProgressIndicator(
                         color: primaryColor,
@@ -69,16 +56,8 @@ class CategoryCard extends StatelessWidget {
             Align(
               alignment: Alignment.bottomLeft,
               child: Padding(
-                padding: EdgeInsets.all(
-                  SizeConfig.scaleWidth(16),
-                ),
-                child: Text(
-                  category.name,
-                  style: whiteTextStyle.copyWith(
-                    fontSize: SizeConfig.scaleText(18),
-                    fontWeight: medium,
-                  ),
-                ),
+                padding: EdgeInsets.all(context.dp(14)),
+                child: Text(category.name, style: context.text.bodyText1),
               ),
             ),
           ],
