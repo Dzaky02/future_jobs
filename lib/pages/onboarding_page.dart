@@ -45,7 +45,8 @@ class OnBoardingPage extends StatelessWidget {
               Spacer(),
               Center(
                 child: ElevatedButton(
-                  onPressed: () => Navigator.pushNamed(context, RouteName.signUp),
+                  onPressed: () =>
+                      Navigator.pushNamed(context, RouteName.signUp),
                   child: Text('Get Started'),
                   style: ElevatedButton.styleFrom(
                       primary: context.secondaryColor,
@@ -55,7 +56,8 @@ class OnBoardingPage extends StatelessWidget {
               SizedBox(height: context.dp(16)),
               Center(
                 child: OutlinedButton(
-                  onPressed: () => Navigator.pushNamed(context, RouteName.signIn),
+                  onPressed: () =>
+                      Navigator.pushNamed(context, RouteName.signIn),
                   child: Text('Sign In'),
                 ),
               ),
