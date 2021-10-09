@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:future_jobs/providers/auth_provider.dart';
-import 'package:provider/provider.dart';
 
 import './home_page.dart';
 import './under_construction_page.dart';
@@ -12,10 +10,6 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  var _isInit = true;
-  // Provider
-  late AuthProvider _authProvider;
-
   // Bottom Navigation Bar Value
   int _selectedIndex = 0;
   List<String> icons = [
@@ -24,6 +18,7 @@ class _MainPageState extends State<MainPage> {
     'assets/svg/icon_love.svg',
     'assets/svg/icon_user.svg',
   ];
+
   List<Widget> pages = [
     HomePage(),
     UnderConstructionPage(
@@ -35,15 +30,6 @@ class _MainPageState extends State<MainPage> {
   ];
 
   @override
-  void didChangeDependencies() {
-    if (_isInit) {
-      _authProvider = Provider.of<AuthProvider>(context);
-    }
-    _isInit = false;
-    super.didChangeDependencies();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       extendBody: true,
@@ -53,7 +39,7 @@ class _MainPageState extends State<MainPage> {
   }
 
   Widget _body() {
-    return Center(child: Text(_authProvider.getUser()!.name));
+    return HomePage();
   }
 
   Widget _bottomNavBar() {

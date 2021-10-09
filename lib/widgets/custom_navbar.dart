@@ -50,7 +50,7 @@ class CustomNavBar extends StatelessWidget {
       child: AnimatedContainer(
         duration: Duration(milliseconds: 300),
         height: 50,
-        width: 30,
+        width: 50,
         alignment:
             (selectedIndex == index) ? Alignment.topCenter : Alignment.center,
         child: SvgPicture.asset(icon,

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../extension/screen_utils_extension.dart';
 import '../models/category_model.dart';
 import '../pages/category_page.dart';
-import '../shared/theme.dart';
 
 class CategoryCard extends StatelessWidget {
   final CategoryModel category;
@@ -36,17 +36,22 @@ class CategoryCard extends StatelessWidget {
                 height: context.dp(180),
                 loadingBuilder: (context, child, loadingProgress) {
                   if (loadingProgress == null) return child;
-                  return Container(
-                    width: context.dp(133),
-                    height: context.dp(180),
-                    color: context.surface,
-                    child: Center(
-                      child: CircularProgressIndicator(
-                        color: primaryColor,
-                        value: loadingProgress.expectedTotalBytes != null
-                            ? loadingProgress.cumulativeBytesLoaded /
-                                loadingProgress.expectedTotalBytes!
-                            : null,
+                  return Shimmer.fromColors(
+                    baseColor: Colors.grey.shade300,
+                    highlightColor: Colors.grey.shade100,
+                    child: Container(
+                      width: context.dp(133),
+                      height: context.dp(180),
+                      color: Colors.grey.shade300,
+                      child: Center(
+                        child: CircularProgressIndicator(
+                          strokeWidth: 1,
+                          color: context.secondaryColor,
+                          value: loadingProgress.expectedTotalBytes != null
+                              ? loadingProgress.cumulativeBytesLoaded /
+                                  loadingProgress.expectedTotalBytes!
+                              : null,
+                        ),
                       ),
                     ),
                   );
@@ -57,7 +62,15 @@ class CategoryCard extends StatelessWidget {
               alignment: Alignment.bottomLeft,
               child: Padding(
                 padding: EdgeInsets.all(context.dp(14)),
-                child: Text(category.name, style: context.text.bodyText1),
+                child: Text(
+                  category.name,
+                  maxLines: 2,
+                  softWrap: true,
+                  textScaleFactor: context.ts,
+                  overflow: TextOverflow.ellipsis,
+                  style: context.text.bodyText1
+                      ?.copyWith(color: context.onPrimary),
+                ),
               ),
             ),
           ],
