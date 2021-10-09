@@ -1,11 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:future_jobs/shared/shared_value.dart';
-import 'package:future_jobs/shared/sharedpref_keys.dart';
-import 'package:future_jobs/shared/theme.dart';
-import 'package:future_jobs/size_config.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../shared/shared_value.dart';
+import '../shared/sharedpref_keys.dart';
+import '../shared/theme.dart';
 
 class SplashPage extends StatefulWidget {
   @override
@@ -27,7 +27,6 @@ class _SplashPageState extends State<SplashPage> {
 
   @override
   Widget build(BuildContext context) {
-    SizeConfig().init(context);
     return Scaffold(
       backgroundColor: primaryColor,
       body: Stack(
@@ -83,8 +82,6 @@ class _SplashPageState extends State<SplashPage> {
       SnackBar(
         content: Center(child: Text('Error: $error')),
         duration: const Duration(milliseconds: 1500),
-        width: SizeConfig.scaleWidth(280),
-        // Width of the SnackBar.
         padding: const EdgeInsets.symmetric(
           horizontal: 8.0, // Inner padding for SnackBar content.
         ),
