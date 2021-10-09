@@ -23,10 +23,7 @@ class CustomNavBar extends StatelessWidget {
       padding: const EdgeInsets.only(top: 5),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [
-            Color(0xffA1A1DE),
-            Color(0xffA1A1DE).withOpacity(0),
-          ],
+          colors: [Color(0xffA1A1DE), Color(0xffA1A1DE).withOpacity(0)],
           begin: Alignment.bottomCenter,
           end: Alignment.topCenter,
         ),
@@ -40,13 +37,9 @@ class CustomNavBar extends StatelessWidget {
 
   List<Widget> _generateItems(BuildContext context) {
     List<Widget> _items = [];
-
     for (int i = 0; i < icons.length; i++) {
-      _items.add(
-        _buildItem(context, icons[i], i, () => onTap?.call(i)),
-      );
+      _items.add(_buildItem(context, icons[i], i, () => onTap?.call(i)));
     }
-
     return _items;
   }
 
