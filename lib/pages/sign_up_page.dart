@@ -88,8 +88,8 @@ class _SignUpPageState extends State<SignUpPage> {
   @override
   void didChangeDependencies() {
     if (_isInit) {
-      authProvider = Provider.of<AuthProvider>(context);
-      userProvider = Provider.of<UserProvider>(context);
+      authProvider = Provider.of<AuthProvider>(context, listen: false);
+      userProvider = Provider.of<UserProvider>(context, listen: false);
     }
     _isInit = false;
     super.didChangeDependencies();
@@ -106,211 +106,6 @@ class _SignUpPageState extends State<SignUpPage> {
 
   @override
   Widget build(BuildContext context) {
-    Widget header() {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Sign Up',
-            textScaleFactor: context.ts,
-            style: context.text.subtitle1?.copyWith(color: context.onSecondary),
-          ),
-          Text(
-            'Begin New Journey',
-            textScaleFactor: context.ts,
-            style: context.text.headline5,
-          ),
-          SizedBox(height: context.h(30)),
-        ],
-      );
-    }
-
-    Widget inputImage() {
-      return Center(
-        child: Container(
-          width: context.dp(110),
-          height: context.dp(110),
-          padding: EdgeInsets.all(context.dp(8)),
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            border: Border.all(color: context.primaryVariant),
-          ),
-          child: Image.asset('assets/image_profile.png'),
-        ),
-      );
-    }
-
-    Widget inputName() {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(height: context.h(30)),
-          Text(
-            'Full Name',
-            style: context.text.subtitle1?.copyWith(color: context.onSecondary),
-          ),
-          SizedBox(height: context.h(8)),
-          TextFormField(
-            maxLines: 1,
-            focusNode: _nameFN,
-            controller: _nameController,
-            textInputAction: TextInputAction.next,
-            cursorColor:
-                _isNameValid ? context.primaryColor : context.errorColor,
-            inputFormatters: [
-              FilteringTextInputFormatter.singleLineFormatter,
-              FilteringTextInputFormatter.allow(RegExp('[a-zA-Z ]')),
-            ],
-            style: context.text.subtitle1?.copyWith(
-                color:
-                    _isNameValid ? context.primaryColor : context.errorColor),
-            onChanged: (value) => (!_isNameValid)
-                ? setState(() => _isNameValid = value.length > 3)
-                : null,
-            validator: (value) =>
-                (value != null && value.length > 6) ? null : '',
-          ),
-        ],
-      );
-    }
-
-    Widget inputEmail() {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(height: context.dp(16)),
-          Text(
-            'Email Address',
-            style: context.text.subtitle1?.copyWith(color: context.onSecondary),
-          ),
-          SizedBox(height: context.h(8)),
-          TextFormField(
-            maxLines: 1,
-            focusNode: _emailFN,
-            controller: _emailController,
-            textInputAction: TextInputAction.next,
-            keyboardType: TextInputType.emailAddress,
-            decoration: kInputDecorTheme(context, _isEmailValid),
-            cursorColor:
-                _isEmailValid ? context.primaryColor : context.errorColor,
-            inputFormatters: [FilteringTextInputFormatter.singleLineFormatter],
-            onChanged: (value) => setState(() =>
-                _isEmailValid = EmailValidator.validate(_emailController.text)),
-            style: context.text.subtitle1?.copyWith(
-                color:
-                    _isEmailValid ? context.primaryColor : context.errorColor),
-            validator: (value) =>
-                EmailValidator.validate(value ?? '') ? null : '',
-          ),
-        ],
-      );
-    }
-
-    Widget inputPassword() {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(height: context.dp(16)),
-          Text(
-            'Password',
-            style: context.text.subtitle1?.copyWith(color: context.onSecondary),
-          ),
-          SizedBox(height: context.h(8)),
-          TextFormField(
-            maxLines: 1,
-            focusNode: _passwordFN,
-            obscureText: !_showPassword,
-            controller: _passwordController,
-            textInputAction: TextInputAction.next,
-            cursorColor:
-                _isPasswordValid ? context.primaryColor : context.errorColor,
-            inputFormatters: [FilteringTextInputFormatter.singleLineFormatter],
-            onChanged: (value) => (!_isPasswordValid)
-                ? setState(() =>
-                    _isPasswordValid = _passwordController.text.length > 6)
-                : null,
-            decoration: kInputDecorTheme(
-              context,
-              _isPasswordValid,
-              IconButton(
-                onPressed: () => setState(() => _showPassword = !_showPassword),
-                icon: Icon(Icons.remove_red_eye, color: context.onSurface),
-              ),
-            ),
-            style: context.text.subtitle1?.copyWith(
-                color: _isPasswordValid
-                    ? context.primaryColor
-                    : context.errorColor),
-            onFieldSubmitted: (_) => _goalFN.requestFocus(),
-            validator: (value) =>
-                (value != null && value.length > 6) ? null : '',
-          ),
-        ],
-      );
-    }
-
-    Widget inputGoal() {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(height: context.h(16)),
-          Text(
-            'Your Goal',
-            style: context.text.subtitle1?.copyWith(color: context.onSecondary),
-          ),
-          SizedBox(height: context.h(8)),
-          TextFormField(
-            maxLines: 1,
-            focusNode: _goalFN,
-            controller: _goalController,
-            keyboardType: TextInputType.text,
-            textInputAction: TextInputAction.done,
-            onFieldSubmitted: (_) => submitSignUp(),
-            inputFormatters: [
-              FilteringTextInputFormatter.singleLineFormatter,
-              FilteringTextInputFormatter.allow(RegExp('[a-zA-Z ,.]')),
-            ],
-            cursorColor:
-                _isGoalValid ? context.primaryColor : context.errorColor,
-            onChanged: (value) => (!_isGoalValid)
-                ? setState(() => _isGoalValid = _goalController.text.length > 4)
-                : null,
-            style: context.text.subtitle1?.copyWith(
-                color:
-                    _isGoalValid ? context.primaryColor : context.errorColor),
-            validator: (value) =>
-                (value != null && value.length > 4) ? null : '',
-          ),
-          SizedBox(height: context.h(40)),
-        ],
-      );
-    }
-
-    Widget signUpButton() {
-      return Container(
-        width: double.infinity,
-        child: ElevatedButton(
-          onPressed: submitSignUp,
-          child: _isLoading
-              ? Center(child: CircularProgressIndicator(strokeWidth: 1.5))
-              : Text('Sign Up'),
-        ),
-      );
-    }
-
-    Widget signInButton() {
-      return Container(
-        margin: EdgeInsets.only(top: context.h(8)),
-        child: Center(
-          child: TextButton(
-            onPressed: () =>
-                Navigator.pushReplacementNamed(context, '/sign-in'),
-            child: Text('Already have an account'),
-          ),
-        ),
-      );
-    }
-
     return Scaffold(
       body: SafeArea(
         child: Form(
@@ -400,6 +195,207 @@ class _SignUpPageState extends State<SignUpPage> {
         content: Text(
           message,
           style: context.text.subtitle1?.copyWith(color: context.onError),
+        ),
+      ),
+    );
+  }
+
+  Widget header() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Sign Up',
+          textScaleFactor: context.ts,
+          style: context.text.subtitle1?.copyWith(color: context.onSecondary),
+        ),
+        Text(
+          'Begin New Journey',
+          textScaleFactor: context.ts,
+          style: context.text.headline5,
+        ),
+        SizedBox(height: context.h(30)),
+      ],
+    );
+  }
+
+  Widget inputImage() {
+    return Center(
+      child: Container(
+        width: context.dp(110),
+        height: context.dp(110),
+        padding: EdgeInsets.all(context.dp(8)),
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          border: Border.all(color: context.primaryVariant),
+        ),
+        child: Image.asset('assets/image_profile.png'),
+      ),
+    );
+  }
+
+  Widget inputName() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(height: context.h(30)),
+        Text(
+          'Full Name',
+          style: context.text.subtitle1?.copyWith(color: context.onSecondary),
+        ),
+        SizedBox(height: context.h(8)),
+        TextFormField(
+          maxLines: 1,
+          focusNode: _nameFN,
+          controller: _nameController,
+          textInputAction: TextInputAction.next,
+          cursorColor: _isNameValid ? context.primaryColor : context.errorColor,
+          inputFormatters: [
+            FilteringTextInputFormatter.singleLineFormatter,
+            FilteringTextInputFormatter.allow(RegExp('[a-zA-Z ]')),
+          ],
+          style: context.text.subtitle1?.copyWith(
+              color: _isNameValid ? context.primaryColor : context.errorColor),
+          onChanged: (value) => (!_isNameValid)
+              ? setState(() => _isNameValid = value.length > 3)
+              : null,
+          onSaved: (newValue) => _nameField = newValue,
+          validator: (value) => (value != null && value.length > 6) ? null : '',
+        ),
+      ],
+    );
+  }
+
+  Widget inputEmail() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(height: context.dp(16)),
+        Text(
+          'Email Address',
+          style: context.text.subtitle1?.copyWith(color: context.onSecondary),
+        ),
+        SizedBox(height: context.h(8)),
+        TextFormField(
+          maxLines: 1,
+          focusNode: _emailFN,
+          controller: _emailController,
+          textInputAction: TextInputAction.next,
+          keyboardType: TextInputType.emailAddress,
+          decoration: kInputDecorTheme(context, _isEmailValid),
+          cursorColor:
+              _isEmailValid ? context.primaryColor : context.errorColor,
+          inputFormatters: [FilteringTextInputFormatter.singleLineFormatter],
+          onChanged: (value) => setState(() =>
+              _isEmailValid = EmailValidator.validate(_emailController.text)),
+          style: context.text.subtitle1?.copyWith(
+              color: _isEmailValid ? context.primaryColor : context.errorColor),
+          onSaved: (newValue) => _emailField = newValue,
+          validator: (value) =>
+              EmailValidator.validate(value ?? '') ? null : '',
+        ),
+      ],
+    );
+  }
+
+  Widget inputPassword() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(height: context.dp(16)),
+        Text(
+          'Password',
+          style: context.text.subtitle1?.copyWith(color: context.onSecondary),
+        ),
+        SizedBox(height: context.h(8)),
+        TextFormField(
+          maxLines: 1,
+          focusNode: _passwordFN,
+          obscureText: !_showPassword,
+          controller: _passwordController,
+          textInputAction: TextInputAction.next,
+          cursorColor:
+              _isPasswordValid ? context.primaryColor : context.errorColor,
+          inputFormatters: [FilteringTextInputFormatter.singleLineFormatter],
+          onChanged: (value) => (!_isPasswordValid)
+              ? setState(
+                  () => _isPasswordValid = _passwordController.text.length > 6)
+              : null,
+          decoration: kInputDecorTheme(
+            context,
+            _isPasswordValid,
+            IconButton(
+              onPressed: () => setState(() => _showPassword = !_showPassword),
+              icon: Icon(Icons.remove_red_eye, color: context.onSurface),
+            ),
+          ),
+          style: context.text.subtitle1?.copyWith(
+              color:
+                  _isPasswordValid ? context.primaryColor : context.errorColor),
+          onFieldSubmitted: (_) => _goalFN.requestFocus(),
+          onSaved: (newValue) => _passwordField = newValue,
+          validator: (value) => (value != null && value.length > 6) ? null : '',
+        ),
+      ],
+    );
+  }
+
+  Widget inputGoal() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(height: context.h(16)),
+        Text(
+          'Your Goal',
+          style: context.text.subtitle1?.copyWith(color: context.onSecondary),
+        ),
+        SizedBox(height: context.h(8)),
+        TextFormField(
+          maxLines: 1,
+          focusNode: _goalFN,
+          controller: _goalController,
+          keyboardType: TextInputType.text,
+          textInputAction: TextInputAction.done,
+          onFieldSubmitted: (_) => submitSignUp(),
+          inputFormatters: [
+            FilteringTextInputFormatter.singleLineFormatter,
+            FilteringTextInputFormatter.allow(RegExp('[a-zA-Z ,.]')),
+          ],
+          cursorColor: _isGoalValid ? context.primaryColor : context.errorColor,
+          onChanged: (value) => (!_isGoalValid)
+              ? setState(() => _isGoalValid = _goalController.text.length > 4)
+              : null,
+          style: context.text.subtitle1?.copyWith(
+              color: _isGoalValid ? context.primaryColor : context.errorColor),
+          onSaved: (newValue) => _goalField = newValue,
+          validator: (value) => (value != null && value.length > 4) ? null : '',
+        ),
+        SizedBox(height: context.h(40)),
+      ],
+    );
+  }
+
+  Widget signUpButton() {
+    return Container(
+      width: double.infinity,
+      child: ElevatedButton(
+        onPressed: submitSignUp,
+        child: _isLoading
+            ? Center(
+                child: CircularProgressIndicator(
+                    strokeWidth: 1.5, color: context.onPrimary))
+            : Text('Sign Up'),
+      ),
+    );
+  }
+
+  Widget signInButton() {
+    return Container(
+      margin: EdgeInsets.only(top: context.h(8)),
+      child: Center(
+        child: TextButton(
+          onPressed: () => Navigator.pushReplacementNamed(context, '/sign-in'),
+          child: Text('Already have an account'),
         ),
       ),
     );
