@@ -2,15 +2,16 @@ import 'dart:convert';
 
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../extension/screen_utils_extension.dart';
 import '../models/user_model.dart';
 import '../providers/auth_provider.dart';
 import '../providers/user_provider.dart';
 import '../shared/sharedpref_keys.dart';
 import '../shared/theme.dart';
-import '../size_config.dart';
 
 class SignInPage extends StatefulWidget {
   @override
@@ -18,14 +19,36 @@ class SignInPage extends StatefulWidget {
 }
 
 class _SignInPageState extends State<SignInPage> {
+  var _isInit = true;
+
   // Shared Preference
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+
+  // Providers
+  late AuthProvider authProvider;
+  late UserProvider userProvider;
 
   // Controller
   TextEditingController _emailController = TextEditingController(text: '');
   TextEditingController _passwordController = TextEditingController(text: '');
 
+  // Form validation status
+  bool _isEmailValid = false;
+  bool _isPasswordValid = false;
+  bool _showPassword = false;
+
+  // Loading status
   bool _isLoading = false;
+
+  @override
+  void didChangeDependencies() {
+    if (_isInit) {
+      authProvider = Provider.of<AuthProvider>(context, listen: false);
+      userProvider = Provider.of<UserProvider>(context, listen: false);
+    }
+    _isInit = false;
+    super.didChangeDependencies();
+  }
 
   Future<void> _setLoginState(UserModel user) async {
     final SharedPreferences prefs = await _prefs;
@@ -48,186 +71,14 @@ class _SignInPageState extends State<SignInPage> {
 
   @override
   Widget build(BuildContext context) {
-    // Size Config
-    SizeConfig().init(context);
-
-    // Provider
-    var authProvider = Provider.of<AuthProvider>(context);
-    var userProvider = Provider.of<UserProvider>(context);
-
-    void showError(String message) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          backgroundColor: Colors.red,
-          content: Text(message),
-        ),
-      );
-    }
-
-    Widget header() {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Sign In',
-            style: greyTextStyle.copyWith(
-              fontSize: SizeConfig.scaleText(16),
-            ),
-          ),
-          SizedBox(
-            height: SizeConfig.scaleHeight(2),
-          ),
-          Text(
-            'Build Your Career',
-            style: blackTextStyle.copyWith(
-              fontSize: SizeConfig.scaleText(24),
-              fontWeight: semiBold,
-            ),
-          ),
-          SizedBox(
-            height: SizeConfig.scaleHeight(40),
-          ),
-        ],
-      );
-    }
-
-    Widget illustration() {
-      return Center(
-        child: Image.asset(
-          'assets/image_sign_in.png',
-          height: SizeConfig.scaleHeight(200),
-        ),
-      );
-    }
-
-    Widget inputEmail() {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            height: SizeConfig.scaleHeight(40),
-          ),
-          Text(
-            'Email Address',
-            style: greyTextStyle.copyWith(
-              fontSize: SizeConfig.scaleText(16),
-            ),
-          ),
-          SizedBox(
-            height: SizeConfig.scaleHeight(8),
-          ),
-          TextFormField(
-            controller: _emailController,
-            cursorColor: primaryColor,
-            style: EmailValidator.validate(_emailController.text)
-                ? purpleTextStyle.copyWith(fontSize: SizeConfig.scaleText(16))
-                : redTextStyle.copyWith(fontSize: SizeConfig.scaleText(16)),
-            keyboardType: TextInputType.emailAddress,
-            textInputAction: TextInputAction.next,
-          ),
-        ],
-      );
-    }
-
-    Widget inputPassword() {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            height: SizeConfig.scaleHeight(20),
-          ),
-          Text(
-            'Password',
-            style: greyTextStyle.copyWith(
-              fontSize: SizeConfig.scaleText(16),
-            ),
-          ),
-          SizedBox(
-            height: SizeConfig.scaleHeight(8),
-          ),
-          TextFormField(
-            controller: _passwordController,
-            cursorColor: primaryColor,
-            obscureText: true,
-            style: purpleTextStyle.copyWith(
-              fontSize: SizeConfig.scaleText(16),
-            ),
-            textInputAction: TextInputAction.done,
-          ),
-          SizedBox(
-            height: SizeConfig.scaleHeight(40),
-          ),
-        ],
-      );
-    }
-
-    Widget signInButton() {
-      return Container(
-        width: double.infinity,
-        child: _isLoading
-            ? Center(
-                child: CircularProgressIndicator(),
-              )
-            : ElevatedButton(
-                onPressed: () async {
-                  if (_emailController.text.isEmpty ||
-                      _passwordController.text.isEmpty) {
-                    showError('Semua field harus diisi');
-                  } else {
-                    setState(() {
-                      _isLoading = true;
-                    });
-
-                    UserModel? user = await authProvider.login(
-                      _emailController.text,
-                      _passwordController.text,
-                    );
-
-                    if (user == null) {
-                      setState(() {
-                        _isLoading = false;
-                      });
-                      showError('email atau password salah');
-                    } else {
-                      userProvider.user = user;
-                      _setLoginState(user);
-                    }
-                  }
-                },
-                style: primaryElevatedStyle(),
-                child: Text(
-                  'Sign In',
-                  style: whiteTextStyle.copyWith(
-                    fontSize: SizeConfig.scaleText(14),
-                    fontWeight: medium,
-                  ),
-                ),
-              ),
-      );
-    }
-
-    Widget signUpButton() {
-      return Center(
-        child: TextButton(
-          onPressed: () => Navigator.pushReplacementNamed(context, '/sign-up'),
-          child: Text(
-            'Create New Account',
-            style: greyTextStyle.copyWith(
-              fontSize: SizeConfig.scaleText(14),
-              fontWeight: light,
-            ),
-          ),
-        ),
-      );
-    }
-
     return Scaffold(
       body: SafeArea(
         child: ListView(
+          physics: BouncingScrollPhysics(),
           keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
           padding: EdgeInsets.symmetric(
-            vertical: SizeConfig.scaleHeight(30),
-            horizontal: SizeConfig.scaleWidth(defaultMargin),
+            vertical: context.h(30),
+            horizontal: context.dp(defaultMargin),
           ),
           children: [
             header(),
@@ -237,6 +88,159 @@ class _SignInPageState extends State<SignInPage> {
             signInButton(),
             signUpButton(),
           ],
+        ),
+      ),
+    );
+  }
+
+  void showError(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        backgroundColor: context.errorColor,
+        content: Text(
+          message,
+          style: context.text.subtitle1?.copyWith(color: context.onError),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _submitLogin() async {
+    if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
+      if (_emailController.text.isEmpty) {
+        _isEmailValid = false;
+      } else if (_passwordController.text.isEmpty) {
+        _isPasswordValid = false;
+      }
+      showError('Please fill out all field');
+    } else {
+      setState(() => _isLoading = true);
+
+      UserModel? user = await authProvider.login(
+          _emailController.text, _passwordController.text);
+
+      if (user == null) {
+        setState(() => _isLoading = false);
+        showError('email atau password salah');
+      } else {
+        userProvider.user = user;
+        _setLoginState(user);
+      }
+    }
+  }
+
+  Widget header() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Sign In',
+          textScaleFactor: context.ts,
+          style: context.text.subtitle1?.copyWith(color: context.onSecondary),
+        ),
+        Text(
+          'Build Your Career',
+          textScaleFactor: context.ts,
+          style: context.text.headline5,
+        ),
+        SizedBox(height: context.h(40)),
+      ],
+    );
+  }
+
+  Widget illustration() {
+    return Center(
+      child: Image.asset('assets/image_sign_in.png', height: context.h(170)),
+    );
+  }
+
+  Widget inputEmail() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(height: context.h(40)),
+        Text(
+          'Email Address',
+          style: context.text.subtitle1?.copyWith(color: context.onSecondary),
+        ),
+        SizedBox(height: context.h(8)),
+        TextFormField(
+          maxLines: 1,
+          controller: _emailController,
+          textInputAction: TextInputAction.next,
+          keyboardType: TextInputType.emailAddress,
+          decoration: kInputDecorTheme(context, _isEmailValid),
+          cursorColor:
+              _isEmailValid ? context.primaryColor : context.errorColor,
+          inputFormatters: [FilteringTextInputFormatter.singleLineFormatter],
+          onChanged: (value) => setState(() =>
+              _isEmailValid = EmailValidator.validate(_emailController.text)),
+          style: context.text.subtitle1?.copyWith(
+              color: _isEmailValid ? context.primaryColor : context.errorColor),
+        ),
+      ],
+    );
+  }
+
+  Widget inputPassword() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(height: context.dp(16)),
+        Text(
+          'Password',
+          style: context.text.subtitle1?.copyWith(color: context.onSecondary),
+        ),
+        SizedBox(height: context.h(8)),
+        TextFormField(
+          maxLines: 1,
+          obscureText: !_showPassword,
+          controller: _passwordController,
+          textInputAction: TextInputAction.done,
+          cursorColor:
+              _isPasswordValid ? context.primaryColor : context.errorColor,
+          inputFormatters: [FilteringTextInputFormatter.singleLineFormatter],
+          onChanged: (value) => setState(
+              () => _isPasswordValid = _passwordController.text.length > 6),
+          decoration: kInputDecorTheme(
+            context,
+            _isPasswordValid,
+            IconButton(
+              onPressed: () => setState(() => _showPassword = !_showPassword),
+              icon: Icon(Icons.remove_red_eye, color: context.onSurface),
+            ),
+          ),
+          style: context.text.subtitle1?.copyWith(
+              color:
+                  _isPasswordValid ? context.primaryColor : context.errorColor),
+          onFieldSubmitted: (_) => _submitLogin(),
+        ),
+        SizedBox(height: context.h(40)),
+      ],
+    );
+  }
+
+  Widget signInButton() {
+    return Container(
+      width: double.infinity,
+      child: ElevatedButton(
+        onPressed: _submitLogin,
+        child: _isLoading
+            ? Center(
+                child: CircularProgressIndicator(
+                    strokeWidth: 1.5, color: context.onPrimary))
+            : Text('Sign In'),
+      ),
+    );
+  }
+
+  Widget signUpButton() {
+    return Padding(
+      padding: EdgeInsets.only(top: context.h(8)),
+      child: Center(
+        child: TextButton(
+          onPressed: () => Navigator.pushReplacementNamed(context, '/sign-up'),
+          child: Text('Create New Account'),
         ),
       ),
     );
