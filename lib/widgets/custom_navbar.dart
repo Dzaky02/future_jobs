@@ -52,20 +52,19 @@ class CustomNavBar extends StatelessWidget {
 
   Widget _buildItem(
       BuildContext context, String icon, int index, VoidCallback onTap) {
-    return AnimatedContainer(
-      duration: Duration(milliseconds: 300),
-      height: 50,
-      alignment:
-          (selectedIndex == index) ? Alignment.topCenter : Alignment.center,
-      child: InkWell(
-        onTap: onTap,
-        child: SvgPicture.asset(
-          icon,
-          width: 24,
-          color: (selectedIndex == index)
-              ? selectedItemColor
-              : unSelectedItemColor,
-        ),
+    return InkWell(
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: Duration(milliseconds: 300),
+        height: 50,
+        width: 30,
+        alignment:
+            (selectedIndex == index) ? Alignment.topCenter : Alignment.center,
+        child: SvgPicture.asset(icon,
+            width: 24,
+            color: (selectedIndex == index)
+                ? selectedItemColor
+                : unSelectedItemColor),
       ),
     );
   }
