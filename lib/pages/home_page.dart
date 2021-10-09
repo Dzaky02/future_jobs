@@ -1,18 +1,22 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'package:future_jobs/models/category_model.dart';
-import 'package:future_jobs/models/job_model.dart';
-import 'package:future_jobs/providers/category_provider.dart';
-import 'package:future_jobs/providers/job_provider.dart';
-import 'package:future_jobs/providers/user_provider.dart';
-import 'package:future_jobs/shared/shared_value.dart';
-import 'package:future_jobs/shared/sharedpref_keys.dart';
-import 'package:future_jobs/shared/theme.dart';
-import 'package:future_jobs/size_config.dart';
-import 'package:future_jobs/widgets/category_card.dart';
-import 'package:future_jobs/widgets/custom_navbar.dart';
-import 'package:future_jobs/widgets/job_tile.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../models/category_model.dart';
+import '../models/job_model.dart';
+import '../models/user_model.dart';
+import '../providers/category_provider.dart';
+import '../providers/job_provider.dart';
+import '../providers/user_provider.dart';
+import '../shared/shared_value.dart';
+import '../shared/sharedpref_keys.dart';
+import '../shared/theme.dart';
+import '../size_config.dart';
+import '../widgets/category_card.dart';
+import '../widgets/custom_navbar.dart';
+import '../widgets/job_tile.dart';
 
 enum SelectedMenu { setting, logout }
 
@@ -24,7 +28,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   // Shared Preferences
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-  late Future<String> _username;
+  late Future<UserModel?> _user;
 
   // Bottom Navigation Bar Value
   int _selectedIndex = 0;
@@ -40,8 +44,9 @@ class _HomePageState extends State<HomePage> {
 
     prefs.setBool(SharedPrefKey.IS_LOGIN, false).then(
       (bool success) {
-        Navigator.pushNamedAndRemoveUntil(
-            context, RouteName.onBoarding, (route) => false);
+        prefs.setString(SharedPrefKey.USER, '').then((value) =>
+            Navigator.pushNamedAndRemoveUntil(
+                context, RouteName.onBoarding, (route) => false));
         return false;
       },
     );
@@ -51,8 +56,12 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
 
-    _username = _prefs.then((SharedPreferences prefs) {
-      return (prefs.getString(SharedPrefKey.USERNAME) ?? 'No Name');
+    _user = _prefs.then((SharedPreferences prefs) {
+      String userData = prefs.getString(SharedPrefKey.USER) ?? '';
+      if (userData.isEmpty)
+        return null;
+      else
+        return UserModel.fromJson(jsonDecode(userData));
     });
   }
 
@@ -90,10 +99,10 @@ class _HomePageState extends State<HomePage> {
                           fontWeight: semiBold,
                         ),
                       )
-                    : FutureBuilder<String>(
-                        future: _username,
+                    : FutureBuilder<UserModel?>(
+                        future: _user,
                         builder: (BuildContext context,
-                            AsyncSnapshot<String> snapshot) {
+                            AsyncSnapshot<UserModel?> snapshot) {
                           switch (snapshot.connectionState) {
                             case ConnectionState.waiting:
                               return Text(
@@ -104,7 +113,7 @@ class _HomePageState extends State<HomePage> {
                                 ),
                               );
                             default:
-                              if (snapshot.hasError) {
+                              if (snapshot.hasError || !snapshot.hasData) {
                                 return Text(
                                   'Error: ${snapshot.error}',
                                   style: blackTextStyle.copyWith(
@@ -113,8 +122,9 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                 );
                               } else {
+                                userProvider.user = snapshot.data!;
                                 return Text(
-                                  snapshot.data!,
+                                  userProvider.getUser()!.name,
                                   style: blackTextStyle.copyWith(
                                     fontSize: SizeConfig.scaleText(24),
                                     fontWeight: semiBold,
