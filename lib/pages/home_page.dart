@@ -38,7 +38,7 @@ class _HomePageState extends State<HomePage> {
   Future<void> _logout() async {
     final SharedPreferences prefs = await _prefs;
 
-    prefs.setBool(SharedPrefConfig.IS_LOGIN, false).then(
+    prefs.setBool(SharedPrefKey.IS_LOGIN, false).then(
       (bool success) {
         Navigator.pushNamedAndRemoveUntil(
             context, RouteName.onBoarding, (route) => false);
@@ -52,7 +52,7 @@ class _HomePageState extends State<HomePage> {
     super.initState();
 
     _username = _prefs.then((SharedPreferences prefs) {
-      return (prefs.getString(SharedPrefConfig.USERNAME) ?? 'No Name');
+      return (prefs.getString(SharedPrefKey.USERNAME) ?? 'No Name');
     });
   }
 

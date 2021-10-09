@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -20,28 +22,28 @@ class _SignInPageState extends State<SignInPage> {
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
   // Controller
-  TextEditingController emailController = TextEditingController(text: '');
-  TextEditingController passwordController = TextEditingController(text: '');
+  TextEditingController _emailController = TextEditingController(text: '');
+  TextEditingController _passwordController = TextEditingController(text: '');
 
-  bool isLoading = false;
+  bool _isLoading = false;
 
   Future<void> _setLoginState(UserModel user) async {
     final SharedPreferences prefs = await _prefs;
+    // Store auth in shared preferences
     // final bool isLogin = (prefs.getBool(SharedPrefConfig.IS_LOGIN) ?? false);
-    prefs.setString(SharedPrefConfig.USERNAME, user.name).then(
-      (bool success) {
-        prefs.setBool(SharedPrefConfig.IS_LOGIN, true).then(
-          (bool success) {
-            setState(() {
-              isLoading = false;
-            });
-            Navigator.pushNamedAndRemoveUntil(
-                context, '/home', (route) => false);
-            return true;
-          },
-        );
-      },
-    );
+    print('AUTH: prepared to store auth data...');
+    final userData = json.encode(user.toJson());
+    prefs.setString(SharedPrefKey.USER, userData).then((value) {
+      prefs.setBool(SharedPrefKey.IS_LOGIN, true).then(
+        (bool success) {
+          setState(() => _isLoading = false);
+          Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+          return true;
+        },
+      );
+    });
+    print(
+        'AUTH: prefs store: ${prefs.getString(SharedPrefKey.USER) ?? 'empty'}');
   }
 
   @override
@@ -115,9 +117,9 @@ class _SignInPageState extends State<SignInPage> {
             height: SizeConfig.scaleHeight(8),
           ),
           TextFormField(
-            controller: emailController,
+            controller: _emailController,
             cursorColor: primaryColor,
-            style: EmailValidator.validate(emailController.text)
+            style: EmailValidator.validate(_emailController.text)
                 ? purpleTextStyle.copyWith(fontSize: SizeConfig.scaleText(16))
                 : redTextStyle.copyWith(fontSize: SizeConfig.scaleText(16)),
             keyboardType: TextInputType.emailAddress,
@@ -144,7 +146,7 @@ class _SignInPageState extends State<SignInPage> {
             height: SizeConfig.scaleHeight(8),
           ),
           TextFormField(
-            controller: passwordController,
+            controller: _passwordController,
             cursorColor: primaryColor,
             obscureText: true,
             style: purpleTextStyle.copyWith(
@@ -162,31 +164,28 @@ class _SignInPageState extends State<SignInPage> {
     Widget signInButton() {
       return Container(
         width: double.infinity,
-        child: isLoading
+        child: _isLoading
             ? Center(
                 child: CircularProgressIndicator(),
               )
             : ElevatedButton(
                 onPressed: () async {
-                  if (emailController.text.isEmpty ||
-                      passwordController.text.isEmpty) {
+                  if (_emailController.text.isEmpty ||
+                      _passwordController.text.isEmpty) {
                     showError('Semua field harus diisi');
                   } else {
                     setState(() {
-                      isLoading = true;
+                      _isLoading = true;
                     });
 
-                    print(
-                        emailController.text + '\n' + passwordController.text);
-
                     UserModel? user = await authProvider.login(
-                      emailController.text,
-                      passwordController.text,
+                      _emailController.text,
+                      _passwordController.text,
                     );
 
                     if (user == null) {
                       setState(() {
-                        isLoading = false;
+                        _isLoading = false;
                       });
                       showError('email atau password salah');
                     } else {
@@ -210,9 +209,7 @@ class _SignInPageState extends State<SignInPage> {
     Widget signUpButton() {
       return Center(
         child: TextButton(
-          onPressed: () {
-            Navigator.pushNamed(context, '/sign-up');
-          },
+          onPressed: () => Navigator.pushReplacementNamed(context, '/sign-up'),
           child: Text(
             'Create New Account',
             style: greyTextStyle.copyWith(

@@ -21,7 +21,7 @@ class _SplashPageState extends State<SplashPage> {
     super.initState();
 
     _isLogin = _prefs.then((SharedPreferences prefs) {
-      return (prefs.getBool(SharedPrefConfig.IS_LOGIN) ?? false);
+      return (prefs.getBool(SharedPrefKey.IS_LOGIN) ?? false);
     });
   }
 
