@@ -1,17 +1,11 @@
-import 'dart:convert';
-
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../extension/screen_utils_extension.dart';
-import '../models/user_model.dart';
 import '../providers/auth_provider.dart';
-import '../providers/user_provider.dart';
 import '../shared/shared_value.dart';
-import '../shared/sharedpref_keys.dart';
 import '../shared/theme.dart';
 
 class SignUpPage extends StatefulWidget {
@@ -22,12 +16,8 @@ class SignUpPage extends StatefulWidget {
 class _SignUpPageState extends State<SignUpPage> {
   var _isInit = true;
 
-  // Shared Preference
-  Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-
   // Providers
   late AuthProvider authProvider;
-  late UserProvider userProvider;
 
   // Controller
   final GlobalKey<FormState> _formKey = GlobalKey();
@@ -58,25 +48,6 @@ class _SignUpPageState extends State<SignUpPage> {
   // Upload loading
   bool _isLoading = false;
 
-  Future<void> _setLoginState(UserModel user) async {
-    final SharedPreferences prefs = await _prefs;
-    // Store auth in shared preferences
-    // final bool isLogin = (prefs.getBool(SharedPrefConfig.IS_LOGIN) ?? false);
-    print('AUTH: prepared to store auth data...');
-    final userData = json.encode(user.toJson());
-    prefs.setString(SharedPrefKey.USER, userData).then((value) {
-      prefs.setBool(SharedPrefKey.IS_LOGIN, true).then(
-        (bool success) {
-          setState(() => _isLoading = false);
-          Navigator.pushNamedAndRemoveUntil(context, RouteName.main, (route) => false);
-          return true;
-        },
-      );
-    });
-    print(
-        'AUTH: prefs store: ${prefs.getString(SharedPrefKey.USER) ?? 'empty'}');
-  }
-
   @override
   void initState() {
     _nameFN = FocusNode();
@@ -90,7 +61,6 @@ class _SignUpPageState extends State<SignUpPage> {
   void didChangeDependencies() {
     if (_isInit) {
       authProvider = Provider.of<AuthProvider>(context, listen: false);
-      userProvider = Provider.of<UserProvider>(context, listen: false);
     }
     _isInit = false;
     super.didChangeDependencies();
@@ -173,20 +143,10 @@ class _SignUpPageState extends State<SignUpPage> {
 
     setState(() => _isLoading = true);
 
-    UserModel? user = await authProvider.register(
-      _emailField!,
-      _passwordField!,
-      _nameField!,
-      _goalField!,
-    );
+    await authProvider.register(
+        _emailField!, _passwordField!, _nameField!, _goalField!);
 
-    if (user == null) {
-      setState(() => _isLoading = false);
-      showError('Oops! seem\'s you already sign-up before');
-    } else {
-      userProvider.user = user;
-      _setLoginState(user);
-    }
+    setState(() => _isLoading = false);
   }
 
   void showError(String message) {
@@ -395,7 +355,8 @@ class _SignUpPageState extends State<SignUpPage> {
       margin: EdgeInsets.only(top: context.h(8)),
       child: Center(
         child: TextButton(
-          onPressed: () => Navigator.pushReplacementNamed(context, RouteName.signIn),
+          onPressed: () =>
+              Navigator.pushReplacementNamed(context, RouteName.signIn),
           child: Text('Already have an account'),
         ),
       ),

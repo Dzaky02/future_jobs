@@ -1,17 +1,11 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/category_model.dart';
 import '../models/job_model.dart';
-import '../models/user_model.dart';
+import '../providers/auth_provider.dart';
 import '../providers/category_provider.dart';
 import '../providers/job_provider.dart';
-import '../providers/user_provider.dart';
-import '../shared/shared_value.dart';
-import '../shared/sharedpref_keys.dart';
 import '../shared/theme.dart';
 import '../size_config.dart';
 import '../widgets/category_card.dart';
@@ -26,9 +20,12 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  // Shared Preferences
-  Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-  late Future<UserModel?> _user;
+  var _isInit = true;
+
+  // Providers
+  late AuthProvider _authProvider;
+  late CategoryProvider _categoryProvider;
+  late JobProvider _jobProvider;
 
   // Bottom Navigation Bar Value
   int _selectedIndex = 0;
@@ -39,38 +36,20 @@ class _HomePageState extends State<HomePage> {
     'assets/svg/icon_user.svg',
   ];
 
-  Future<void> _logout() async {
-    final SharedPreferences prefs = await _prefs;
-
-    prefs.setBool(SharedPrefKey.IS_LOGIN, false).then(
-      (bool success) {
-        prefs.setString(SharedPrefKey.USER, '').then((value) =>
-            Navigator.pushNamedAndRemoveUntil(
-                context, RouteName.onBoarding, (route) => false));
-        return false;
-      },
-    );
-  }
-
   @override
-  void initState() {
-    super.initState();
-
-    _user = _prefs.then((SharedPreferences prefs) {
-      String userData = prefs.getString(SharedPrefKey.USER) ?? '';
-      if (userData.isEmpty)
-        return null;
-      else
-        return UserModel.fromJson(jsonDecode(userData));
-    });
+  void didChangeDependencies() {
+    if (_isInit) {
+      _authProvider = Provider.of<AuthProvider>(context, listen: false);
+      _categoryProvider = Provider.of<CategoryProvider>(context, listen: false);
+      _jobProvider = Provider.of<JobProvider>(context, listen: false);
+    }
+    _isInit = false;
+    super.didChangeDependencies();
   }
 
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    var userProvider = Provider.of<UserProvider>(context);
-    var categoryProvider = Provider.of<CategoryProvider>(context);
-    var jobProvider = Provider.of<JobProvider>(context);
 
     Widget header() {
       return Padding(
@@ -91,56 +70,20 @@ class _HomePageState extends State<HomePage> {
                     fontSize: SizeConfig.scaleText(16),
                   ),
                 ),
-                (userProvider.getUser() != null)
-                    ? Text(
-                        userProvider.getUser()!.name,
-                        style: blackTextStyle.copyWith(
-                          fontSize: SizeConfig.scaleText(24),
-                          fontWeight: semiBold,
-                        ),
-                      )
-                    : FutureBuilder<UserModel?>(
-                        future: _user,
-                        builder: (BuildContext context,
-                            AsyncSnapshot<UserModel?> snapshot) {
-                          switch (snapshot.connectionState) {
-                            case ConnectionState.waiting:
-                              return Text(
-                                'Getting data...',
-                                style: blackTextStyle.copyWith(
-                                  fontSize: SizeConfig.scaleText(24),
-                                  fontWeight: semiBold,
-                                ),
-                              );
-                            default:
-                              if (snapshot.hasError || !snapshot.hasData) {
-                                return Text(
-                                  'Error: ${snapshot.error}',
-                                  style: blackTextStyle.copyWith(
-                                    fontSize: SizeConfig.scaleText(24),
-                                    fontWeight: semiBold,
-                                  ),
-                                );
-                              } else {
-                                userProvider.user = snapshot.data!;
-                                return Text(
-                                  userProvider.getUser()!.name,
-                                  style: blackTextStyle.copyWith(
-                                    fontSize: SizeConfig.scaleText(24),
-                                    fontWeight: semiBold,
-                                  ),
-                                );
-                              }
-                          }
-                        },
-                      ),
+                Text(
+                  _authProvider.getUser()!.name,
+                  style: blackTextStyle.copyWith(
+                    fontSize: SizeConfig.scaleText(24),
+                    fontWeight: semiBold,
+                  ),
+                ),
               ],
             ),
             PopupMenuButton<SelectedMenu>(
               onSelected: (value) {
                 switch (value) {
                   case SelectedMenu.logout:
-                    _logout();
+                    _authProvider.logout();
                     break;
                   default:
                     break;
@@ -208,7 +151,7 @@ class _HomePageState extends State<HomePage> {
           Container(
             height: SizeConfig.scaleHeight(200),
             child: FutureBuilder<List<CategoryModel>>(
-              future: categoryProvider.getCategories(),
+              future: _categoryProvider.getCategories(),
               builder: (context, snapshot) {
                 // If future builder finish the prosess
                 if (snapshot.connectionState == ConnectionState.done &&
@@ -265,7 +208,7 @@ class _HomePageState extends State<HomePage> {
               height: SizeConfig.scaleHeight(24),
             ),
             FutureBuilder<List<JobModel>>(
-              future: jobProvider.getJobs(),
+              future: _jobProvider.getJobs(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.done &&
                     snapshot.hasData) {

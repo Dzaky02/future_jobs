@@ -26,9 +26,7 @@ class MyApp extends StatelessWidget {
     ]);
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<AuthProvider>(
-          create: (create) => AuthProvider(),
-        ),
+        ChangeNotifierProvider.value(value: AuthProvider()),
         ChangeNotifierProvider<UserProvider>(
           create: (create) => UserProvider(),
         ),
@@ -186,13 +184,24 @@ class MyApp extends StatelessWidget {
             ),
           ),
         ),
+        home: Consumer<AuthProvider>(
+          builder: (context, value, child) => (value.isAuth)
+              ? MainPage()
+              : FutureBuilder(
+                  future: value.tryAutoLogin(),
+                  builder: (context, snapshot) =>
+                      (snapshot.connectionState == ConnectionState.waiting)
+                          ? SplashPage()
+                          : OnBoardingPage(),
+                ),
+        ),
         routes: {
-          RouteName.splash: (context) => SplashPage(),
-          RouteName.onBoarding: (context) => OnBoardingPage(),
           RouteName.signIn: (context) => SignInPage(),
           RouteName.signUp: (context) => SignUpPage(),
-          RouteName.main: (context) => MainPage(),
         },
+        // RouteName.splash: (context) => SplashPage(),
+        // RouteName.onBoarding: (context) => OnBoardingPage(),
+        // RouteName.main: (context) => MainPage(),
       ),
     );
   }

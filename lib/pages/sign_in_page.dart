@@ -1,17 +1,11 @@
-import 'dart:convert';
-
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../extension/screen_utils_extension.dart';
-import '../models/user_model.dart';
 import '../providers/auth_provider.dart';
-import '../providers/user_provider.dart';
 import '../shared/shared_value.dart';
-import '../shared/sharedpref_keys.dart';
 import '../shared/theme.dart';
 
 class SignInPage extends StatefulWidget {
@@ -21,13 +15,8 @@ class SignInPage extends StatefulWidget {
 
 class _SignInPageState extends State<SignInPage> {
   var _isInit = true;
-
-  // Shared Preference
-  Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-
   // Providers
   late AuthProvider authProvider;
-  late UserProvider userProvider;
 
   // Controller
   TextEditingController _emailController = TextEditingController(text: '');
@@ -45,30 +34,9 @@ class _SignInPageState extends State<SignInPage> {
   void didChangeDependencies() {
     if (_isInit) {
       authProvider = Provider.of<AuthProvider>(context, listen: false);
-      userProvider = Provider.of<UserProvider>(context, listen: false);
     }
     _isInit = false;
     super.didChangeDependencies();
-  }
-
-  Future<void> _setLoginState(UserModel user) async {
-    final SharedPreferences prefs = await _prefs;
-    // Store auth in shared preferences
-    // final bool isLogin = (prefs.getBool(SharedPrefConfig.IS_LOGIN) ?? false);
-    print('AUTH: prepared to store auth data...');
-    final userData = json.encode(user.toJson());
-    prefs.setString(SharedPrefKey.USER, userData).then((value) {
-      prefs.setBool(SharedPrefKey.IS_LOGIN, true).then(
-        (bool success) {
-          setState(() => _isLoading = false);
-          Navigator.pushNamedAndRemoveUntil(
-              context, RouteName.main, (route) => false);
-          return true;
-        },
-      );
-    });
-    print(
-        'AUTH: prefs store: ${prefs.getString(SharedPrefKey.USER) ?? 'empty'}');
   }
 
   @override
@@ -118,16 +86,9 @@ class _SignInPageState extends State<SignInPage> {
     } else {
       setState(() => _isLoading = true);
 
-      UserModel? user = await authProvider.login(
-          _emailController.text, _passwordController.text);
+      await authProvider.login(_emailController.text, _passwordController.text);
 
-      if (user == null) {
-        setState(() => _isLoading = false);
-        showError('email atau password salah');
-      } else {
-        userProvider.user = user;
-        _setLoginState(user);
-      }
+      setState(() => _isLoading = false);
     }
   }
 
