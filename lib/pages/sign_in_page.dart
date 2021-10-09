@@ -11,6 +11,7 @@ import '../models/user_model.dart';
 import '../providers/auth_provider.dart';
 import '../providers/user_provider.dart';
 import '../shared/sharedpref_keys.dart';
+import '../shared/shared_value.dart';
 import '../shared/theme.dart';
 
 class SignInPage extends StatefulWidget {
@@ -60,7 +61,7 @@ class _SignInPageState extends State<SignInPage> {
       prefs.setBool(SharedPrefKey.IS_LOGIN, true).then(
         (bool success) {
           setState(() => _isLoading = false);
-          Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+          Navigator.pushNamedAndRemoveUntil(context, RouteName.main, (route) => false);
           return true;
         },
       );
@@ -239,7 +240,7 @@ class _SignInPageState extends State<SignInPage> {
       padding: EdgeInsets.only(top: context.h(8)),
       child: Center(
         child: TextButton(
-          onPressed: () => Navigator.pushReplacementNamed(context, '/sign-up'),
+          onPressed: () => Navigator.pushReplacementNamed(context, RouteName.signUp),
           child: Text('Create New Account'),
         ),
       ),

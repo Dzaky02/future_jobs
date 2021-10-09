@@ -10,6 +10,7 @@ import '../extension/screen_utils_extension.dart';
 import '../models/user_model.dart';
 import '../providers/auth_provider.dart';
 import '../providers/user_provider.dart';
+import '../shared/shared_value.dart';
 import '../shared/sharedpref_keys.dart';
 import '../shared/theme.dart';
 
@@ -67,7 +68,7 @@ class _SignUpPageState extends State<SignUpPage> {
       prefs.setBool(SharedPrefKey.IS_LOGIN, true).then(
         (bool success) {
           setState(() => _isLoading = false);
-          Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+          Navigator.pushNamedAndRemoveUntil(context, RouteName.main, (route) => false);
           return true;
         },
       );
@@ -394,7 +395,7 @@ class _SignUpPageState extends State<SignUpPage> {
       margin: EdgeInsets.only(top: context.h(8)),
       child: Center(
         child: TextButton(
-          onPressed: () => Navigator.pushReplacementNamed(context, '/sign-in'),
+          onPressed: () => Navigator.pushReplacementNamed(context, RouteName.signIn),
           child: Text('Already have an account'),
         ),
       ),

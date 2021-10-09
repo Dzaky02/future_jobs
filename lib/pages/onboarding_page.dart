@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../extension/screen_utils_extension.dart';
+import '../shared/shared_value.dart';
 
 class OnBoardingPage extends StatelessWidget {
   @override
@@ -44,7 +45,7 @@ class OnBoardingPage extends StatelessWidget {
               Spacer(),
               Center(
                 child: ElevatedButton(
-                  onPressed: () => Navigator.pushNamed(context, '/sign-up'),
+                  onPressed: () => Navigator.pushNamed(context, RouteName.signUp),
                   child: Text('Get Started'),
                   style: ElevatedButton.styleFrom(
                       primary: context.secondaryColor,
@@ -54,7 +55,7 @@ class OnBoardingPage extends StatelessWidget {
               SizedBox(height: context.dp(16)),
               Center(
                 child: OutlinedButton(
-                  onPressed: () => Navigator.pushNamed(context, '/sign-in'),
+                  onPressed: () => Navigator.pushNamed(context, RouteName.signIn),
                   child: Text('Sign In'),
                 ),
               ),

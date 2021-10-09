@@ -68,7 +68,7 @@ class _SplashPageState extends State<SplashPage> {
               _navigatePage(
                   context,
                   (snapshot.data ?? false)
-                      ? RouteName.home
+                      ? RouteName.main
                       : RouteName.onBoarding);
               return _buildImage();
             }

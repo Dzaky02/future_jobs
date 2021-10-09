@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
-import './pages/home_page.dart';
+import './pages/main_page.dart';
 import './pages/onboarding_page.dart';
 import './pages/sign_in_page.dart';
 import './pages/sign_up_page.dart';
@@ -191,7 +191,7 @@ class MyApp extends StatelessWidget {
           RouteName.onBoarding: (context) => OnBoardingPage(),
           RouteName.signIn: (context) => SignInPage(),
           RouteName.signUp: (context) => SignUpPage(),
-          RouteName.home: (context) => HomePage(),
+          RouteName.main: (context) => MainPage(),
         },
       ),
     );
