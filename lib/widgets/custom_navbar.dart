@@ -48,7 +48,7 @@ class CustomNavBar extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: AnimatedContainer(
-        duration: Duration(milliseconds: 300),
+        duration: Duration(milliseconds: 200),
         height: 50,
         width: 50,
         alignment:

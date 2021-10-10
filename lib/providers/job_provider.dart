@@ -17,6 +17,14 @@ class JobProvider with ChangeNotifier {
     return await getJobs();
   }
 
+  Future<List<JobModel>> refreshByCategory(String category) async {
+    if (_mapCategoriesJobs.containsKey(category)) {
+      _mapCategoriesJobs[category]!.clear();
+      _mapCategoriesJobs.remove(category);
+    }
+    return await getJobsByCategory(category);
+  }
+
   Future<List<JobModel>> getJobs() async {
     if (_jobs.isEmpty) {
       try {

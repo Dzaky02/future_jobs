@@ -89,15 +89,7 @@ class _HomePageState extends State<HomePage> {
         if (!_isLoadJobs && !_isLoadCategory)
           SliverList(
               delegate: SliverChildListDelegate.fixed([hotCategories()])),
-        if (!_isLoadJobs && !_isLoadCategory)
-          SliverPersistentHeader(
-            pinned: true,
-            delegate: SubHeaderDelegate(
-              subTitle: 'Just Posted',
-              extendedHeight: context.dp(56),
-              collapsedHeight: context.dp(50),
-            ),
-          ),
+        if (!_isLoadJobs && !_isLoadCategory) _buildJustPostedHeader(context),
         if (!_isLoadJobs && !_isLoadCategory) justPosted(),
       ],
     );
@@ -290,7 +282,18 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget justPosted() {
+  SliverPersistentHeader _buildJustPostedHeader(BuildContext context) {
+    return SliverPersistentHeader(
+      pinned: true,
+      delegate: SubHeaderDelegate(
+        subTitle: 'Just Posted',
+        extendedHeight: context.dp(56),
+        collapsedHeight: context.dp(50),
+      ),
+    );
+  }
+
+  SliverPadding justPosted() {
     return SliverPadding(
       padding: EdgeInsets.only(
         left: context.dp(defaultMargin),
