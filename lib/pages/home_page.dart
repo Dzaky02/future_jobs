@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:future_jobs/widgets/subheader_delegate.dart';
 import 'package:provider/provider.dart';
 
 import '../extension/screen_utils_extension.dart';
@@ -88,6 +89,15 @@ class _HomePageState extends State<HomePage> {
         if (!_isLoadJobs && !_isLoadCategory)
           SliverList(
               delegate: SliverChildListDelegate.fixed([hotCategories()])),
+        if (!_isLoadJobs && !_isLoadCategory)
+          SliverPersistentHeader(
+            pinned: true,
+            delegate: SubHeaderDelegate(
+              subTitle: 'Just Posted',
+              extendedHeight: context.dp(56),
+              collapsedHeight: context.dp(50),
+            ),
+          ),
         if (!_isLoadJobs && !_isLoadCategory) justPosted(),
       ],
     );
@@ -275,14 +285,6 @@ class _HomePageState extends State<HomePage> {
               child: CategoryCard(_categories[index]),
             ),
           ),
-        ),
-        Padding(
-          padding: EdgeInsets.only(
-            top: context.h(30),
-            left: context.dp(defaultMargin),
-            bottom: context.dp(8),
-          ),
-          child: Text('Just Posted', style: context.text.subtitle1),
         ),
       ],
     );
