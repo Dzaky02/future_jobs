@@ -22,11 +22,11 @@ class _MainPageState extends State<MainPage> {
   List<Widget> pages = [
     HomePage(),
     UnderConstructionPage(
-        imgPath: 'assets/image_sign_in.png', pageName: 'Notification'),
+        imgPath: 'assets/svg/notification.svg', pageName: 'Notification'),
     UnderConstructionPage(
-        imgPath: 'assets/image_sign_in.png', pageName: 'Favorite Job\'s'),
+        imgPath: 'assets/svg/noted_list.svg', pageName: 'Favorite Job\'s'),
     UnderConstructionPage(
-        imgPath: 'assets/image_sign_in.png', pageName: 'Profile Page'),
+        imgPath: 'assets/svg/male_avatar.svg', pageName: 'Profile Page'),
   ];
 
   @override

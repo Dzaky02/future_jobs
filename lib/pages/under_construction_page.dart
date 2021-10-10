@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import '../extension/screen_utils_extension.dart';
 
@@ -17,13 +18,14 @@ class UnderConstructionPage extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Image.asset(
+          SvgPicture.asset(
             imgPath,
             width: context.dp(200),
             fit: BoxFit.fitWidth,
           ),
+          SizedBox(height: 14),
           Text('Sorry, $pageName now is under construction.',
-              style: context.text.subtitle1),
+              textAlign: TextAlign.center, style: context.text.subtitle1),
         ],
       ),
     );
