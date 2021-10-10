@@ -39,7 +39,7 @@ class _MainPageState extends State<MainPage> {
   }
 
   Widget _body() {
-    return HomePage();
+    return SafeArea(bottom: false, child: pages[_selectedIndex]);
   }
 
   Widget _bottomNavBar() {

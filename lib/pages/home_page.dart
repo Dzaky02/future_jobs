@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:future_jobs/widgets/shimmer_widget.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
 import '../extension/screen_utils_extension.dart';
@@ -10,6 +10,8 @@ import '../providers/category_provider.dart';
 import '../providers/job_provider.dart';
 import '../shared/theme.dart';
 import '../widgets/category_card.dart';
+import '../widgets/job_tile.dart';
+import '../widgets/shimmer_widget.dart';
 
 enum SelectedMenu { setting, logout }
 
@@ -22,6 +24,7 @@ class _HomePageState extends State<HomePage> {
   var _isInit = true;
   var _isLoadCategory = true;
   var _isLoadJobs = true;
+  var _myScrollController = ScrollController();
 
   // Providers
   late AuthProvider _authProvider;
@@ -42,6 +45,10 @@ class _HomePageState extends State<HomePage> {
   @override
   void didChangeDependencies() {
     if (_isInit) {
+      print('IS INIT TRUE');
+      // Scroll Controller Listener
+      _myScrollController.addListener(_onRefreshPage);
+
       _authProvider = Provider.of<AuthProvider>(context, listen: false);
       _categoryProvider = Provider.of<CategoryProvider>(context, listen: false);
       _jobProvider = Provider.of<JobProvider>(context, listen: false);
@@ -61,28 +68,47 @@ class _HomePageState extends State<HomePage> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    Widget body() {
-      return CustomScrollView(
-        physics: (_isLoadJobs || _isLoadCategory)
-            ? NeverScrollableScrollPhysics()
-            : BouncingScrollPhysics(),
-        slivers: [
-          SliverList(delegate: SliverChildListDelegate.fixed([header()])),
-          if (_isLoadJobs || _isLoadCategory) _buildShimmerLoading(context),
-          if (!_isLoadJobs && !_isLoadCategory)
-            SliverList(
-                delegate: SliverChildListDelegate.fixed([hotCategories()])),
-          if (!_isLoadJobs && !_isLoadCategory) justPosted(),
-        ],
-      );
-    }
-
-    return SafeArea(child: body());
+  void dispose() {
+    _myScrollController.removeListener(_onRefreshPage);
+    _myScrollController.dispose();
+    super.dispose();
   }
 
-  void _onClickJobTile(JobModel job) {
-    // Do something
+  @override
+  Widget build(BuildContext context) {
+    print('Rebuild Home Page');
+    return CustomScrollView(
+      controller: _myScrollController,
+      physics: (_isLoadJobs || _isLoadCategory)
+          ? NeverScrollableScrollPhysics()
+          : BouncingScrollPhysics(),
+      slivers: [
+        header(),
+        if (_isLoadJobs || _isLoadCategory) _buildShimmerLoading(context),
+        if (!_isLoadJobs && !_isLoadCategory)
+          SliverList(
+              delegate: SliverChildListDelegate.fixed([hotCategories()])),
+        if (!_isLoadJobs && !_isLoadCategory) justPosted(),
+      ],
+    );
+  }
+
+  Future<void> _onRefreshPage() async {
+    if (_myScrollController.offset < -110) {
+      setState(() {
+        _isLoadJobs = true;
+        _isLoadCategory = true;
+      });
+      await _jobProvider.refresh().then((value) {
+        _jobs = value;
+        setState(() => _isLoadJobs = false);
+      });
+      await _categoryProvider.refresh().then((value) {
+        _categories = value;
+        setState(() => _isLoadCategory = false);
+      });
+      print('SUCCESS REFRESH');
+    }
   }
 
   void _onSelectedPopMenu(SelectedMenu value) {
@@ -93,53 +119,6 @@ class _HomePageState extends State<HomePage> {
       default:
         break;
     }
-  }
-
-  Widget header() {
-    return Padding(
-      padding: EdgeInsets.symmetric(
-          vertical: context.h(30), horizontal: context.dp(defaultMargin)),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Howdy',
-                  style: context.text.subtitle1
-                      ?.copyWith(color: context.hintColor)),
-              SizedBox(
-                width: context.dp(250),
-                child: Text(
-                  _authProvider.getUser()!.name,
-                  maxLines: 1,
-                  softWrap: true,
-                  textScaleFactor: context.ts,
-                  overflow: TextOverflow.ellipsis,
-                  style: context.text.headline6?.copyWith(height: 1.6),
-                ),
-              ),
-            ],
-          ),
-          PopupMenuButton<SelectedMenu>(
-            onSelected: _onSelectedPopMenu,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(12))),
-            offset: Offset(-context.dp(20), context.dp(50)),
-            itemBuilder: (context) => _popMenuOption,
-            child: Container(
-              width: context.dp(58),
-              padding: EdgeInsets.all(context.dp(4)),
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(color: context.primaryVariant),
-              ),
-              child: Image.asset('assets/image_profile.png'),
-            ),
-          ),
-        ],
-      ),
-    );
   }
 
   SliverFillRemaining _buildShimmerLoading(BuildContext context) {
@@ -218,6 +197,58 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  SliverAppBar header() {
+    return SliverAppBar(
+      elevation: 0,
+      centerTitle: true,
+      onStretchTrigger: _onRefreshPage,
+      backgroundColor: context.background,
+      toolbarHeight: context.dp(100),
+      collapsedHeight: context.dp(100),
+      titleSpacing: context.dp(defaultMargin),
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Howdy',
+                  style: context.text.subtitle1
+                      ?.copyWith(color: context.hintColor)),
+              SizedBox(
+                width: context.dp(250),
+                child: Text(
+                  _authProvider.getUser()!.name,
+                  maxLines: 1,
+                  softWrap: true,
+                  textScaleFactor: context.ts,
+                  overflow: TextOverflow.ellipsis,
+                  style: context.text.headline6?.copyWith(height: 1.6),
+                ),
+              ),
+            ],
+          ),
+          PopupMenuButton<SelectedMenu>(
+            onSelected: _onSelectedPopMenu,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(12))),
+            offset: Offset(-context.dp(20), context.dp(50)),
+            itemBuilder: (context) => _popMenuOption,
+            child: Container(
+              width: context.dp(58),
+              padding: EdgeInsets.all(context.dp(4)),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(color: context.primaryVariant),
+              ),
+              child: SvgPicture.asset('assets/svg/male_avatar.svg'),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget hotCategories() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -262,7 +293,7 @@ class _HomePageState extends State<HomePage> {
       padding: EdgeInsets.only(
         left: context.dp(defaultMargin),
         right: context.dp(defaultMargin),
-        bottom: context.dp(6),
+        bottom: context.dp(50),
       ),
       sliver: SliverList(
         delegate: SliverChildBuilderDelegate(
@@ -275,40 +306,10 @@ class _HomePageState extends State<HomePage> {
                 indent: context.dp(70),
               );
             }
-            return _buildJobTile(context, _jobs[index ~/ 2]);
+            return JobTile(_jobs[index ~/ 2]);
           },
           childCount: (_jobs.length * 2),
         ),
-      ),
-    );
-  }
-
-  ListTile _buildJobTile(BuildContext context, JobModel job) {
-    return ListTile(
-      onTap: () => _onClickJobTile(job),
-      minLeadingWidth: context.dp(45),
-      contentPadding: EdgeInsets.zero,
-      horizontalTitleGap: context.dp(26),
-      minVerticalPadding: context.dp(12),
-      leading: Image.network(
-        job.companyLogo,
-        width: context.dp(45),
-      ),
-      title: Text(
-        job.name,
-        maxLines: 1,
-        softWrap: true,
-        textScaleFactor: context.ts,
-        overflow: TextOverflow.ellipsis,
-        style: context.text.bodyText1,
-      ),
-      subtitle: Text(
-        job.companyName,
-        maxLines: 1,
-        softWrap: true,
-        textScaleFactor: context.ts,
-        overflow: TextOverflow.ellipsis,
-        style: context.text.bodyText2,
       ),
     );
   }

@@ -12,6 +12,11 @@ class JobProvider with ChangeNotifier {
 
   UnmodifiableListView<JobModel> get jobs => UnmodifiableListView(_jobs);
 
+  Future<List<JobModel>> refresh() async {
+    _jobs.clear();
+    return await getJobs();
+  }
+
   Future<List<JobModel>> getJobs() async {
     if (_jobs.isEmpty) {
       try {

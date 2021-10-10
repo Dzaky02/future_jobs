@@ -11,6 +11,11 @@ class CategoryProvider with ChangeNotifier {
 
   UnmodifiableListView<CategoryModel> get items => UnmodifiableListView(_items);
 
+  Future<List<CategoryModel>> refresh() async {
+    _items.clear();
+    return await getCategories();
+  }
+
   Future<List<CategoryModel>> getCategories() async {
     if (_items.isEmpty) {
       try {

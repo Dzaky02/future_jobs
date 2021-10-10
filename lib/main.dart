@@ -159,16 +159,19 @@ class MyApp extends StatelessWidget {
             subtitle1: TextStyle(
               fontSize: 16,
               letterSpacing: 0,
+              color: blackColor,
               fontWeight: FontWeight.normal,
             ),
             subtitle2: TextStyle(
               fontSize: 14,
               letterSpacing: 0,
+              color: blackColor,
               fontWeight: FontWeight.w500,
             ),
             bodyText1: TextStyle(
               fontSize: 16,
               letterSpacing: 0,
+              color: blackColor,
               fontWeight: FontWeight.w500,
             ),
             bodyText2: TextStyle(
@@ -180,6 +183,7 @@ class MyApp extends StatelessWidget {
             caption: TextStyle(
               fontSize: 14,
               letterSpacing: 0,
+              color: blackColor,
               fontWeight: FontWeight.w300,
             ),
           ),
@@ -199,9 +203,6 @@ class MyApp extends StatelessWidget {
           RouteName.signIn: (context) => SignInPage(),
           RouteName.signUp: (context) => SignUpPage(),
         },
-        // RouteName.splash: (context) => SplashPage(),
-        // RouteName.onBoarding: (context) => OnBoardingPage(),
-        // RouteName.main: (context) => MainPage(),
       ),
     );
   }

@@ -1,67 +1,71 @@
 import 'package:flutter/material.dart';
-import 'package:future_jobs/models/job_model.dart';
-import 'package:future_jobs/pages/detail_page.dart';
-import 'package:future_jobs/size_config.dart';
+import 'package:shimmer/shimmer.dart';
 
-import '../shared/theme.dart';
+import '../extension/screen_utils_extension.dart';
+import '../models/job_model.dart';
 
 class JobTile extends StatelessWidget {
   final JobModel job;
 
   JobTile(this.job);
 
+  void _onClickJobTile(JobModel job) {
+    // Do something
+  }
+
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => DetailPage(job),
-          ),
-        );
-      },
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Image.network(
-            job.companyLogo,
-            width: SizeConfig.scaleWidth(44),
-          ),
-          SizedBox(
-            width: SizeConfig.scaleWidth(24),
-          ),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  job.name,
-                  style: blackTextStyle.copyWith(
-                    fontSize: SizeConfig.scaleText(16),
-                    fontWeight: medium,
-                  ),
+    return ListTile(
+      onTap: () => _onClickJobTile(job),
+      minLeadingWidth: context.dp(45),
+      contentPadding: EdgeInsets.zero,
+      horizontalTitleGap: context.dp(26),
+      minVerticalPadding: context.dp(12),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+      leading: Image.network(
+        job.companyLogo,
+        fit: BoxFit.fitWidth,
+        width: context.dp(45),
+        loadingBuilder: (context, child, loadingProgress) {
+          if (loadingProgress == null) return child;
+          return Shimmer.fromColors(
+            baseColor: Colors.grey.shade300,
+            highlightColor: Colors.grey.shade100,
+            child: Container(
+              width: context.dp(45),
+              height: context.dp(45),
+              padding: const EdgeInsets.all(3),
+              decoration: BoxDecoration(
+                  shape: BoxShape.circle, color: Colors.grey.shade300),
+              child: Center(
+                child: CircularProgressIndicator(
+                  strokeWidth: 1,
+                  color: context.secondaryColor,
+                  value: loadingProgress.expectedTotalBytes != null
+                      ? loadingProgress.cumulativeBytesLoaded /
+                          loadingProgress.expectedTotalBytes!
+                      : null,
                 ),
-                SizedBox(
-                  height: SizeConfig.scaleHeight(2),
-                ),
-                Text(
-                  job.companyName,
-                  style: greyTextStyle,
-                ),
-                SizedBox(
-                  height: SizeConfig.scaleHeight(14),
-                ),
-                Divider(
-                  thickness: 1,
-                ),
-                SizedBox(
-                  height: SizeConfig.scaleHeight(12),
-                ),
-              ],
+              ),
             ),
-          ),
-        ],
+          );
+        },
+      ),
+      title: Text(
+        job.name,
+        maxLines: 1,
+        softWrap: true,
+        textScaleFactor: context.ts,
+        overflow: TextOverflow.ellipsis,
+        style: context.text.bodyText1,
+      ),
+      subtitle: Text(
+        job.companyName,
+        maxLines: 1,
+        softWrap: true,
+        textScaleFactor: context.ts,
+        overflow: TextOverflow.ellipsis,
+        style: context.text.bodyText2,
       ),
     );
   }

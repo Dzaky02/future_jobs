@@ -1,6 +1,7 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
 import '../extension/screen_utils_extension.dart';
@@ -15,6 +16,7 @@ class SignInPage extends StatefulWidget {
 
 class _SignInPageState extends State<SignInPage> {
   var _isInit = true;
+
   // Providers
   late AuthProvider authProvider;
 
@@ -111,11 +113,9 @@ class _SignInPageState extends State<SignInPage> {
     );
   }
 
-  Widget illustration() {
-    return Center(
-      child: Image.asset('assets/image_sign_in.png', height: context.h(170)),
-    );
-  }
+  Widget illustration() => Center(
+      child: SvgPicture.asset('assets/svg/image_sign_in.svg',
+          height: context.h(170)));
 
   Widget inputEmail() {
     return Column(
