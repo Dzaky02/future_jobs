@@ -10,7 +10,6 @@ import './pages/splash_page.dart';
 import './providers/auth_provider.dart';
 import './providers/category_provider.dart';
 import './providers/job_provider.dart';
-import './providers/user_provider.dart';
 import './shared/shared_value.dart';
 import './shared/theme.dart';
 
@@ -27,9 +26,6 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider.value(value: AuthProvider()),
-        ChangeNotifierProvider<UserProvider>(
-          create: (create) => UserProvider(),
-        ),
         ChangeNotifierProvider<CategoryProvider>(
           create: (create) => CategoryProvider(),
         ),
