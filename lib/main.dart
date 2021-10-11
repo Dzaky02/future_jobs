@@ -190,7 +190,7 @@ class MyApp extends StatelessWidget {
         ),
         home: Consumer<AuthProvider>(
           builder: (context, value, child) => (value.isAuth)
-              ? MainPage()
+              ? MainPage(user: value.getUser()!)
               : FutureBuilder(
                   future: value.tryAutoLogin(),
                   builder: (context, snapshot) =>

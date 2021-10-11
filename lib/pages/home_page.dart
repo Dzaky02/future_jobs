@@ -252,7 +252,7 @@ class _HomePageState extends State<HomePage> {
             onSelected: _onSelectedPopMenu,
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(12))),
-            offset: Offset(-context.dp(20), context.dp(50)),
+            offset: Offset(-context.dp(25), context.dp(55)),
             itemBuilder: (context) => _popMenuOption,
             child: Container(
               width: context.dp(58),

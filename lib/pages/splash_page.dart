@@ -7,13 +7,8 @@ class SplashPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: primaryColor,
-      body: Stack(
-        alignment: Alignment.center,
-        children: [
-          Center(
-            child: _buildImage(),
-          ),
-        ],
+      body: Center(
+        child: _buildImage(),
       ),
     );
   }

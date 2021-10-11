@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import './shared_method.dart';
 import '../extension/extensions.dart';
-import '../size_config.dart';
 
 // Note: Constant Values
 const double defaultMargin = 24.0;
@@ -24,33 +22,6 @@ Color greyColor = Color(0xffB3B5C4);
 Color transparentColor = Colors.transparent;
 Color inputFieldColor = Color(0xffF1F0F5);
 
-// Note: Text Styles
-TextStyle purpleTextStyle = GoogleFonts.poppins(
-  color: primaryColor,
-);
-
-TextStyle blackTextStyle = GoogleFonts.poppins(
-  color: blackColor,
-);
-
-TextStyle whiteTextStyle = GoogleFonts.poppins(
-  color: whiteColor,
-);
-
-TextStyle redTextStyle = GoogleFonts.poppins(
-  color: redColor,
-);
-
-TextStyle greyTextStyle = GoogleFonts.poppins(
-  color: greyColor,
-);
-
-// Note: Font Weights
-FontWeight light = FontWeight.w300;
-FontWeight medium = FontWeight.w500;
-FontWeight semiBold = FontWeight.w700;
-FontWeight bold = FontWeight.bold;
-
 // Decoration
 InputDecoration kInputDecorTheme(BuildContext context, bool validator,
     [Widget? suffixIcon]) {
@@ -62,17 +33,5 @@ InputDecoration kInputDecorTheme(BuildContext context, bool validator,
           color: validator ? context.primaryColor : context.errorColor),
     ),
     suffixIcon: suffixIcon,
-  );
-}
-
-ButtonStyle primaryElevatedStyle() {
-  return ElevatedButton.styleFrom(
-    primary: primaryColor,
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(
-        SizeConfig.scaleWidth(66),
-      ),
-    ),
-    padding: EdgeInsets.all(SizeConfig.scaleWidth(13)),
   );
 }

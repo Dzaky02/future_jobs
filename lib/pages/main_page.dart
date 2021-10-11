@@ -1,11 +1,17 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
+import 'package:future_jobs/models/user_model.dart';
 
 import './home_page.dart';
 import './under_construction_page.dart';
+import '../pages/profile_page.dart';
 import '../widgets/custom_navbar.dart';
 
 class MainPage extends StatefulWidget {
+  final UserModel user;
+
+  const MainPage({Key? key, required this.user}) : super(key: key);
+
   @override
   _MainPageState createState() => _MainPageState();
 }
@@ -30,11 +36,13 @@ class _MainPageState extends State<MainPage> {
         key: Key('Main-2'),
         imgPath: 'assets/svg/noted_list.svg',
         pageName: 'Favorite Job\'s'),
-    UnderConstructionPage(
-        key: Key('Main-3'),
-        imgPath: 'assets/svg/male_avatar.svg',
-        pageName: 'Profile Page'),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    pages.add(ProfilePage(key: Key('Main-3'), user: widget.user));
+  }
 
   @override
   Widget build(BuildContext context) {
