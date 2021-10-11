@@ -25,6 +25,9 @@ class JobProvider with ChangeNotifier {
     return await getJobsByCategory(category);
   }
 
+  JobModel findById(String idJob) =>
+      _jobs.firstWhere((element) => element.id.compareTo(idJob) == 0);
+
   Future<List<JobModel>> getJobs() async {
     if (_jobs.isEmpty) {
       try {
@@ -83,6 +86,25 @@ class JobProvider with ChangeNotifier {
       }
     } else {
       return UnmodifiableListView(_mapCategoriesJobs[category]!);
+    }
+  }
+
+  Future<void> toggleApplyJob(String idJob) async {
+    // Looking job in _jobs
+    int index = _jobs.indexWhere((element) => element.id.compareTo(idJob) == 0);
+    if (index > -1) {
+      _jobs[index].isApplied = true;
+      _mapCategoriesJobs.forEach((key, value) {
+        value.forEach((element) {
+          if (element.id.compareTo(idJob) == 0) {
+            element.isApplied = true;
+          }
+        });
+      });
+      notifyListeners();
+      return;
+    } else {
+      print('TOGGLE APPLY JOB: ID JOB IS NOT FOUND');
     }
   }
 }

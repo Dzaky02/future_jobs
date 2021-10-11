@@ -10,6 +10,7 @@ class JobModel {
   late List responsibilities;
   late int createdAt;
   late int updatedAt;
+  late bool isApplied;
 
   JobModel({
     required this.id,
@@ -23,6 +24,7 @@ class JobModel {
     required this.responsibilities,
     required this.createdAt,
     required this.updatedAt,
+    this.isApplied = false,
   });
 
   JobModel.fromJson(Map<String, dynamic> json) {
@@ -37,6 +39,7 @@ class JobModel {
     this.responsibilities = json['responsibilities'];
     this.createdAt = json['createdAt'];
     this.updatedAt = json['updatedAt'];
+    this.isApplied = false;
   }
 
   Map<String, dynamic> toJson() {
