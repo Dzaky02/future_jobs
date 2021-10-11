@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:future_jobs/widgets/shimmer_widget.dart';
 import 'package:provider/provider.dart';
 
-import '../extension/screen_utils_extension.dart';
+import '../extension/extensions.dart';
 import '../models/category_model.dart';
 import '../models/job_model.dart';
 import '../providers/job_provider.dart';
@@ -179,21 +179,29 @@ class _CategoryPageState extends State<CategoryPage> {
         title: Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            Text(widget.category.name,
-                textScaleFactor: context.ts,
-                style: context.text.headline6
-                    ?.copyWith(fontSize: 16, color: context.onPrimary)),
+            Hero(
+              tag: widget.category.id.categoryTitle,
+              transitionOnUserGestures: true,
+              child: Text(widget.category.name,
+                  textScaleFactor: context.ts,
+                  style: context.text.headline6
+                      ?.copyWith(fontSize: 16, color: context.onPrimary)),
+            ),
             Text('12,309 available',
                 textScaleFactor: context.ts,
                 style: context.text.subtitle1
                     ?.copyWith(fontSize: 12, color: context.onPrimary)),
           ],
         ),
-        background: ClipRRect(
-          borderRadius: BorderRadius.vertical(bottom: Radius.circular(16)),
-          child: Image.network(
-            widget.category.imageUrl,
-            fit: BoxFit.cover,
+        background: Hero(
+          tag: widget.category.id.categoryImg,
+          transitionOnUserGestures: true,
+          child: ClipRRect(
+            borderRadius: BorderRadius.vertical(bottom: Radius.circular(16)),
+            child: Image.network(
+              widget.category.imageUrl,
+              fit: BoxFit.cover,
+            ),
           ),
         ),
         stretchModes: const <StretchMode>[

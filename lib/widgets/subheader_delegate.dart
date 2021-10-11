@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../extension/screen_utils_extension.dart';
+import '../extension/extensions.dart';
 import '../shared/theme.dart';
 
 class SubHeaderDelegate extends SliverPersistentHeaderDelegate {

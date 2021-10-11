@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
-import '../extension/screen_utils_extension.dart';
+import '../extension/extensions.dart';
 import '../models/job_model.dart';
 
 class JobTile extends StatelessWidget {

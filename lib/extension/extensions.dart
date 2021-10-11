@@ -54,3 +54,12 @@ extension ScreenUtil on BuildContext {
   InputDecorationTheme get inputDecoration =>
       Theme.of(this).inputDecorationTheme;
 }
+
+// Hero Tag extension
+extension HeroTag on String {
+  String get categoryImg => 'category-img-$this';
+  String get categoryTitle => 'category-title-$this';
+  String get jobImg => 'job-img-$this';
+  String get jobTitle => 'job-title-$this';
+  String get jobSubTitle => 'job-subtitle-$this';
+}

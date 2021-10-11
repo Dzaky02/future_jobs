@@ -3,7 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:future_jobs/widgets/subheader_delegate.dart';
 import 'package:provider/provider.dart';
 
-import '../extension/screen_utils_extension.dart';
+import '../extension/extensions.dart';
 import '../models/category_model.dart';
 import '../models/job_model.dart';
 import '../providers/auth_provider.dart';

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import './shared_method.dart';
-import '../extension/screen_utils_extension.dart';
+import '../extension/extensions.dart';
 import '../size_config.dart';
 
 // Note: Constant Values

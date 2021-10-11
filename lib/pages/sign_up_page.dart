@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
-import '../extension/screen_utils_extension.dart';
+import '../extension/extensions.dart';
 import '../providers/auth_provider.dart';
 import '../shared/shared_value.dart';
 import '../shared/theme.dart';

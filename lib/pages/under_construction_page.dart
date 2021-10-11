@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import '../extension/screen_utils_extension.dart';
+import '../extension/extensions.dart';
 
 class UnderConstructionPage extends StatelessWidget {
   final String imgPath;

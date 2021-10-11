@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../extension/screen_utils_extension.dart';
+import '../extension/extensions.dart';
 import '../shared/shared_value.dart';
 
 class OnBoardingPage extends StatelessWidget {
