@@ -1,3 +1,4 @@
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 
 import './home_page.dart';
@@ -20,13 +21,19 @@ class _MainPageState extends State<MainPage> {
   ];
 
   List<Widget> pages = [
-    HomePage(),
+    HomePage(key: Key('Main-0')),
     UnderConstructionPage(
-        imgPath: 'assets/svg/notification.svg', pageName: 'Notification'),
+        key: Key('Main-1'),
+        imgPath: 'assets/svg/notification.svg',
+        pageName: 'Notification'),
     UnderConstructionPage(
-        imgPath: 'assets/svg/noted_list.svg', pageName: 'Favorite Job\'s'),
+        key: Key('Main-2'),
+        imgPath: 'assets/svg/noted_list.svg',
+        pageName: 'Favorite Job\'s'),
     UnderConstructionPage(
-        imgPath: 'assets/svg/male_avatar.svg', pageName: 'Profile Page'),
+        key: Key('Main-3'),
+        imgPath: 'assets/svg/male_avatar.svg',
+        pageName: 'Profile Page'),
   ];
 
   @override
@@ -39,7 +46,18 @@ class _MainPageState extends State<MainPage> {
   }
 
   Widget _body() {
-    return SafeArea(bottom: false, child: pages[_selectedIndex]);
+    return SafeArea(
+      bottom: false,
+      child: PageTransitionSwitcher(
+        duration: Duration(milliseconds: 500),
+        transitionBuilder: (child, primaryAnimation, secondaryAnimation) =>
+            FadeThroughTransition(
+                animation: primaryAnimation,
+                secondaryAnimation: secondaryAnimation,
+                child: child),
+        child: pages[_selectedIndex],
+      ),
+    );
   }
 
   Widget _bottomNavBar() {

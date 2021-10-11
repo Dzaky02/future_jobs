@@ -17,6 +17,8 @@ import '../widgets/shimmer_widget.dart';
 enum SelectedMenu { setting, logout }
 
 class HomePage extends StatefulWidget {
+  const HomePage({Key? key}) : super(key: key);
+
   @override
   _HomePageState createState() => _HomePageState();
 }
