@@ -11,62 +11,66 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text('Howdy', style: context.text.subtitle1),
-          Container(
-            width: context.dp(200),
-            height: context.dp(200),
-            margin:
-                EdgeInsets.only(top: context.dp(10), bottom: context.dp(20)),
-            padding: EdgeInsets.all(context.dp(12)),
-            decoration: _neumorphicBox(BoxShape.circle),
-            child: SvgPicture.asset('assets/svg/male_avatar.svg'),
-          ),
-          Container(
-            width: context.dp(300),
-            padding: EdgeInsets.all(context.dp(16)),
-            decoration: _neumorphicBox(),
-            child: Column(
-              children: _userDataDisplayText(context),
+    return Padding(
+      padding: EdgeInsets.only(bottom: context.h(80)),
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text('Howdy', style: context.text.subtitle1),
+            Container(
+              width: context.dp(200),
+              height: context.dp(200),
+              margin:
+                  EdgeInsets.only(top: context.dp(10), bottom: context.dp(20)),
+              padding: EdgeInsets.all(context.dp(12)),
+              decoration: _neumorphicBox(BoxShape.circle),
+              child: SvgPicture.asset('assets/svg/male_avatar.svg'),
             ),
-          ),
-        ],
+            Container(
+              width: context.dp(300),
+              padding: EdgeInsets.all(context.dp(16)),
+              margin: EdgeInsets.only(bottom: context.dp(10)),
+              decoration: _neumorphicBox(),
+              child: Column(
+                children: _userDataDisplayText(context),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 
   List<Widget> _userDataDisplayText(BuildContext context) => [
-    Text(
-      user.name,
-      maxLines: 2,
-      softWrap: true,
-      textAlign: TextAlign.center,
-      textScaleFactor: context.ts,
-      overflow: TextOverflow.ellipsis,
-      style: context.text.headline6?.copyWith(height: 1.6),
-    ),
-    Text(
-      user.email,
-      maxLines: 1,
-      softWrap: true,
-      textAlign: TextAlign.center,
-      textScaleFactor: context.ts,
-      overflow: TextOverflow.ellipsis,
-      style: context.text.bodyText1?.copyWith(height: 1.6),
-    ),
-    Text(
-      user.goal,
-      maxLines: 1,
-      softWrap: true,
-      textAlign: TextAlign.center,
-      textScaleFactor: context.ts,
-      overflow: TextOverflow.ellipsis,
-      style: context.text.bodyText2?.copyWith(height: 1.6),
-    ),
-  ];
+        Text(
+          user.name,
+          maxLines: 2,
+          softWrap: true,
+          textAlign: TextAlign.center,
+          textScaleFactor: context.ts,
+          overflow: TextOverflow.ellipsis,
+          style: context.text.headline6?.copyWith(height: 1.6),
+        ),
+        Text(
+          user.email,
+          maxLines: 1,
+          softWrap: true,
+          textAlign: TextAlign.center,
+          textScaleFactor: context.ts,
+          overflow: TextOverflow.ellipsis,
+          style: context.text.bodyText1?.copyWith(height: 1.6),
+        ),
+        Text(
+          user.goal,
+          maxLines: 1,
+          softWrap: true,
+          textAlign: TextAlign.center,
+          textScaleFactor: context.ts,
+          overflow: TextOverflow.ellipsis,
+          style: context.text.bodyText2?.copyWith(height: 1.6),
+        ),
+      ];
 
   BoxDecoration _neumorphicBox([BoxShape shape = BoxShape.rectangle]) {
     return BoxDecoration(
