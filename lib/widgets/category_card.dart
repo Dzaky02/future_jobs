@@ -52,22 +52,22 @@ class CategoryCard extends StatelessWidget {
                       baseColor: Colors.grey.shade300,
                       highlightColor: Colors.grey.shade100,
                       child: Container(
-                        width: context.dp(133),
-                        height: context.dp(180),
-                        color: Colors.grey.shade300,
-                        child: Center(
-                          child: CircularProgressIndicator(
-                            strokeWidth: 1,
-                            color: context.secondaryColor,
-                            value: loadingProgress.expectedTotalBytes != null
-                                ? loadingProgress.cumulativeBytesLoaded /
-                                    loadingProgress.expectedTotalBytes!
-                                : null,
-                          ),
-                        ),
-                      ),
+                          width: context.dp(133),
+                          height: context.dp(180),
+                          color: Colors.grey.shade300),
                     );
                   },
+                  errorBuilder: (context, error, stackTrace) => Container(
+                    width: context.dp(133),
+                    height: context.dp(180),
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: context.primaryColor,
+                    ),
+                    child: Image.asset('assets/logo.png',
+                        width: context.dp(90), fit: BoxFit.contain),
+                  ),
                 ),
               ),
             ),

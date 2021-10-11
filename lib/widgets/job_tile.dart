@@ -36,24 +36,21 @@ class JobTile extends StatelessWidget {
               baseColor: Colors.grey.shade300,
               highlightColor: Colors.grey.shade100,
               child: Container(
-                width: context.dp(45),
-                height: context.dp(45),
-                padding: const EdgeInsets.all(3),
-                decoration: BoxDecoration(
-                    shape: BoxShape.circle, color: Colors.grey.shade300),
-                child: Center(
-                  child: CircularProgressIndicator(
-                    strokeWidth: 1,
-                    color: context.secondaryColor,
-                    value: loadingProgress.expectedTotalBytes != null
-                        ? loadingProgress.cumulativeBytesLoaded /
-                            loadingProgress.expectedTotalBytes!
-                        : null,
-                  ),
-                ),
-              ),
+                  width: context.dp(45),
+                  height: context.dp(45),
+                  padding: const EdgeInsets.all(3),
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle, color: Colors.grey.shade300)),
             );
           },
+          errorBuilder: (context, error, stackTrace) => Container(
+            width: context.dp(45),
+            height: context.dp(45),
+            padding: const EdgeInsets.all(3),
+            decoration: BoxDecoration(
+                shape: BoxShape.circle, color: Colors.grey.shade400),
+            child: Icon(Icons.image_not_supported, color: context.onSurface),
+          ),
         ),
         title: Text(
           job.name,

@@ -217,6 +217,14 @@ class _CategoryPageState extends State<CategoryPage> {
             child: Image.network(
               widget.category.imageUrl,
               fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) => Container(
+                width: context.dw,
+                height: context.h(270),
+                alignment: Alignment.center,
+                color: Colors.grey.shade400,
+                child: Icon(Icons.image_not_supported,
+                    size: 20, color: context.onSurface),
+              ),
             ),
           ),
         ),
