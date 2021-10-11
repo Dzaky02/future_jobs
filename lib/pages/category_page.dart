@@ -42,12 +42,20 @@ class _CategoryPageState extends State<CategoryPage> {
 
       _jobProvider.getJobsByCategory(widget.category.name).then((value) {
         _bigCompanies = value;
-        setState(() => _isLoadBigCompanies = false);
+        if (mounted) {
+          setState(() => _isLoadBigCompanies = false);
+        } else {
+          _isLoadBigCompanies = false;
+        }
       });
 
       _jobProvider.getJobs().then((value) {
         _startups = value;
-        setState(() => _isLoadStartups = false);
+        if (mounted) {
+          setState(() => _isLoadStartups = false);
+        } else {
+          _isLoadStartups = false;
+        }
       });
     }
     _isInit = false;
@@ -103,11 +111,19 @@ class _CategoryPageState extends State<CategoryPage> {
       });
       await _jobProvider.refreshByCategory(widget.category.name).then((value) {
         _bigCompanies = value;
-        setState(() => _isLoadBigCompanies = false);
+        if (mounted) {
+          setState(() => _isLoadBigCompanies = false);
+        } else {
+          _isLoadBigCompanies = false;
+        }
       });
       await _jobProvider.refresh().then((value) {
         _startups = value;
-        setState(() => _isLoadStartups = false);
+        if (mounted) {
+          setState(() => _isLoadStartups = false);
+        } else {
+          _isLoadStartups = false;
+        }
       });
       print('SUCCESS REFRESH');
     }

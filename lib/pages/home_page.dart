@@ -56,12 +56,20 @@ class _HomePageState extends State<HomePage> {
 
       _categoryProvider.getCategories().then((value) {
         _categories = value;
-        setState(() => _isLoadCategory = false);
+        if (mounted) {
+          setState(() => _isLoadCategory = false);
+        } else {
+          _isLoadCategory = false;
+        }
       });
 
       _jobProvider.getJobs().then((value) {
         _jobs = value;
-        setState(() => _isLoadJobs = false);
+        if (mounted) {
+          setState(() => _isLoadJobs = false);
+        } else {
+          _isLoadJobs = false;
+        }
       });
     }
     _isInit = false;
@@ -103,11 +111,19 @@ class _HomePageState extends State<HomePage> {
       });
       await _jobProvider.refresh().then((value) {
         _jobs = value;
-        setState(() => _isLoadJobs = false);
+        if (mounted) {
+          setState(() => _isLoadJobs = false);
+        } else {
+          _isLoadJobs = false;
+        }
       });
       await _categoryProvider.refresh().then((value) {
         _categories = value;
-        setState(() => _isLoadCategory = false);
+        if (mounted) {
+          setState(() => _isLoadCategory = false);
+        } else {
+          _isLoadCategory = false;
+        }
       });
       print('SUCCESS REFRESH');
     }
