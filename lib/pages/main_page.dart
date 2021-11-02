@@ -63,7 +63,7 @@ class _MainPageState extends State<MainPage> {
                 animation: primaryAnimation,
                 secondaryAnimation: secondaryAnimation,
                 child: child),
-        child: pages[_selectedIndex],
+        child: Scaffold(body: pages[_selectedIndex]),
       ),
     );
   }
