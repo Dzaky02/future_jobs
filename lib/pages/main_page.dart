@@ -41,7 +41,9 @@ class _MainPageState extends State<MainPage> {
   @override
   void initState() {
     super.initState();
-    pages.add(ProfilePage(key: Key('Main-3'), user: widget.user));
+    if (pages.length < 4) {
+      pages.add(ProfilePage(key: Key('Main-3'), user: widget.user));
+    }
   }
 
   @override

@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
 import '../extension/extensions.dart';
+import '../models/http_exception.dart';
 import '../providers/auth_provider.dart';
 import '../shared/shared_value.dart';
 import '../shared/theme.dart';
@@ -144,8 +145,12 @@ class _SignUpPageState extends State<SignUpPage> {
 
     setState(() => _isLoading = true);
 
-    await authProvider.register(
-        _emailField!, _passwordField!, _nameField!, _goalField!);
+    await authProvider
+        .register(_emailField!, _passwordField!, _nameField!, _goalField!)
+        .onError((error, stackTrace) => showError(error is HttpException
+            ? error.message
+            : 'Unstable internet connection!'))
+        .then((value) => Navigator.pop(context));
 
     setState(() => _isLoading = false);
   }

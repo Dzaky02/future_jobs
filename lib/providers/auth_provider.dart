@@ -63,15 +63,17 @@ class AuthProvider with ChangeNotifier {
 
       if (response.statusCode == 200) {
         _userData = UserModel.fromJson(jsonDecode(response.body));
-        notifyListeners();
         // Store auth in shared preferences
         print('AUTH: prepared to store auth data...');
+        print('USER-DATA: $_userData');
         final _prefs = await SharedPreferences.getInstance();
         _prefs.setString(SharedPrefKey.USER, response.body);
         print(
             'AUTH: prefs store: ${_prefs.getString(SharedPrefKey.USER) ?? 'empty'}');
+        // Notify to change screen state.
+        notifyListeners();
       } else {
-        throw HttpException(response.body);
+        throw HttpException(jsonDecode(response.body)['message']);
       }
     } catch (e) {
       print(e);

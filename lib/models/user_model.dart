@@ -29,4 +29,9 @@ class UserModel {
       'goal': this.goal,
     };
   }
+
+  @override
+  String toString() {
+    return 'UserModel{id: $id, name: $name, email: $email, password: $password, goal: $goal}';
+  }
 }

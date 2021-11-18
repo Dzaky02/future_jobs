@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
 import '../extension/extensions.dart';
+import '../models/http_exception.dart';
 import '../providers/auth_provider.dart';
 import '../shared/shared_value.dart';
 import '../shared/theme.dart';
@@ -88,7 +89,12 @@ class _SignInPageState extends State<SignInPage> {
     } else {
       setState(() => _isLoading = true);
 
-      await authProvider.login(_emailController.text, _passwordController.text);
+      await authProvider
+          .login(_emailController.text, _passwordController.text)
+          .onError((error, stackTrace) => showError(error is HttpException
+              ? error.message
+              : 'Unstable internet connection!'))
+          .then((value) => Navigator.pop(context));
 
       setState(() => _isLoading = false);
     }
@@ -183,19 +189,17 @@ class _SignInPageState extends State<SignInPage> {
     );
   }
 
-  Widget signInButton() {
-    return Container(
-      width: double.infinity,
-      child: ElevatedButton(
-        onPressed: _submitLogin,
-        child: _isLoading
-            ? Center(
-                child: CircularProgressIndicator(
-                    strokeWidth: 1.5, color: context.onPrimary))
-            : Text('Sign In'),
-      ),
-    );
-  }
+  Widget signInButton() => Container(
+        width: double.infinity,
+        child: ElevatedButton(
+          onPressed: _submitLogin,
+          child: _isLoading
+              ? Center(
+                  child: CircularProgressIndicator(
+                      strokeWidth: 1.5, color: context.onPrimary))
+              : Text('Sign In'),
+        ),
+      );
 
   Widget signUpButton() {
     return Padding(
