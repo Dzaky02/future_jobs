@@ -39,7 +39,7 @@ dependencies:
   provider: ^6.0.1
 
   # Using Shared Preferences
-  shared_preferences: ^2.0.8
+  shared_preferences: ^2.0.9
 
   # Animation
   animations: ^2.0.2
